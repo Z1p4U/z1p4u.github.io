@@ -1,7 +1,8 @@
 {
-  "name": "portfolio",
+  "name": "z1p4u.github.io",
   "private": true,
   "version": "0.0.0",
+  "homepage": "https://z1p4u.github.io",
   "type": "module",
   "scripts": {
     "dev": "vite",
