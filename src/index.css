@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --animate-delay: 1s;
+  --animate-duration: 0.9s;
+}
+
+.animate__duration-slow {
+  animation-duration: 1s;
+}
+
+.animate__delay-2000s {
+  animation-delay: calc(1.2s - var(--animate-delay));
+}
+.animate__delay-4000s {
+  animation-delay: calc(1.4s - var(--animate-delay));
+}

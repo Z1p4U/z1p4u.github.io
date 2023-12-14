@@ -1,0 +1,22 @@
+.onhover {
+  transition: 0.5s;
+}
+
+.onhover:hover {
+  background-color: #3b82f6;
+}
+
+.onhover:hover .icon {
+  transition: 1s;
+  /* transition-timing-function: ease; */
+  transform: rotateY(360deg);
+}
+
+.onhover:hover .changecolor {
+  color: white;
+}
+
+.onhover:hover .changebg {
+  color: #3b82f6;
+  background-color: white;
+}
