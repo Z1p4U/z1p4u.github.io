@@ -7,7 +7,7 @@ import About from "../pages/About";
 import Footer from "../components/Footer";
 import Projects from "../pages/Projects";
 import Credits from "../pages/Credits";
-import About_contact from "../pages/About_Contact";
+import About_contact from "../pages/About_contact";
 import ProjectShowcase from "../components/ProjectShowcase";
 import Skills from "../components/Skills";
 
