@@ -103,10 +103,10 @@ const HeroSection = () => {
 
             <div className=" mt-8 md:me-5">
               <p className=" text-[#bebebe] text-sm leading-6 tracking-wide md:leading-7 text-start">
-                Welcome to my portfolio! We are passionate and dedicated web
-                developers with a focus on crafting impactful web experiences,
+                Welcome to my portfolio! I am a passionate and dedicated web
+                developer with a focus on crafting impactful web experiences,
                 <span className="hidden lg:inline">
-                  We love creating beautiful and user-friendly websites.
+                  I love creating beautiful and user-friendly websites.
                 </span>{" "}
                 Let's collaborate and bring your web ideas to life!
               </p>
