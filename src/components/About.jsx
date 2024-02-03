@@ -5,7 +5,7 @@ import { MdDownload } from "react-icons/md";
 
 const About = () => {
   const targetRef = useRef(null);
-  const [ref, inView] = useInView();
+  const [ref, inView] = useInView({ triggerOnce: true });
   const slideUpAni = useAnimation();
   const { scrollYProgress } = useScroll({
     target: targetRef,

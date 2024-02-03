@@ -21,14 +21,14 @@ import { motion, useScroll, useTransform, useAnimation } from "framer-motion";
 
 const Skills = () => {
   const targetRef = useRef(null);
-  const [ref, inView] = useInView();
+  const [ref, inView] = useInView({ triggerOnce: true });
   const slideUpAni = useAnimation();
   const { scrollYProgress } = useScroll({
     target: targetRef,
     offset: ["start end", "center center"],
   });
 
-  const opacity = useTransform(scrollYProgress, [1, 0], [1, 0]);
+  const opacity = useTransform(scrollYProgress, [0, 1], [0, 1]);
   const y = useTransform(
     scrollYProgress,
     [0.1, 0.25, 0.75, 1],
@@ -42,7 +42,7 @@ const Skills = () => {
         opacity: 1,
         transition: {
           type: "keyframes",
-          duration: 1,
+          duration: 1.5,
           bounce: 0.3,
         },
       });
@@ -50,7 +50,7 @@ const Skills = () => {
 
     if (!inView) {
       slideUpAni.start({
-        y: "50%",
+        y: "100%",
         opacity: 0,
         transition: {
           type: "keyframes",
@@ -108,40 +108,20 @@ const Skills = () => {
             className="skill-content text-[70px] sm:text-[85px] overflow-hidden mx-auto text-[#bebebe] px-0 lg:px-20 flex flex-wrap justify-evenly gap-2 sm:gap-20 w-3/4 lg:w-[60%] align-middle items-center"
             style={{ opacity: 1, transform: "none" }}
           >
-            <FaHtml5 className="icon" />
-            <FaCss3 className="icon" />
-            <BiLogoJavascript className="icon" />
-            <FaBootstrap className="icon" />
-            <BiLogoSass className="icon" />
-            <BiLogoTailwindCss className="icon" />
-            <FaReact className="icon" />
-            <BiLogoRedux className="icon" />
-            <BsGithub className="icon" />
-            <FaPhp className="icon" />
-            <SiMysql className="icon" />
-            <FaLaravel className="icon" />
+            <FaHtml5 className="icon" title="HTML" />
+            <FaCss3 className="icon" title="CSS" />
+            <BiLogoJavascript className="icon" title="Java Script" />
+            <FaBootstrap className="icon" title="Bootstrap" />
+            <BiLogoSass className="icon" title="SASS" />
+            <BiLogoTailwindCss className="icon" title="Tailwind" />
+            <FaReact className="icon" title="React" />
+            <BiLogoRedux className="icon" title="Redux Tool Kit" />
+            <BsGithub className="icon" title="Github" />
+            <FaPhp className="icon" title="PHP" />
+            <FaLaravel className="icon" title="Laravel" />
+            <SiMysql className="icon" title="MySQL" />
           </motion.div>
         </div>
-
-        {/* <h2 className=" flex justify-center text-4xl  font-semibold">
-           My <span className="text-blue-500 ms-2">Skills</span>
-         </h2>
-         <div className=" grid justify-center items-center align-middle grid-cols-5 grid-rows-3 gap-6 my-5 px-20">
-           <FaHtml5 className=" text-9xl mx-auto my-auto icon col-start-1 col-span-1 row-start-1 row-span-1" />
-           <FaCss3 className=" text-9xl mx-auto my-auto icon col-start-2 col-span-1 row-start-1 row-span-1" />
-           <BiLogoJavascript className=" text-9xl mx-auto my-auto icon col-start-3 col-span-1 row-start-1 row-span-1" />
-           <FaBootstrap className=" text-9xl mx-auto my-auto icon col-start-4 col-span-1 row-start-1 row-span-1" />
-           <BiLogoSass className=" text-9xl mx-auto my-auto icon col-start-5 col-span-1 row-start-1 row-span-1" />
-           <BiLogoTailwindCss className=" text-9xl mx-auto my-auto icon col-start-1 col-span-1 row-start-2 row-span-1" />
-           <FaReact className=" text-9xl mx-auto my-auto icon col-start-2 col-span-1 row-start-2 row-span-1" />
-           <BiLogoRedux className=" text-9xl mx-auto my-auto icon col-start-3 col-span-1 row-start-2 row-span-1" />
-           <BsGithub className=" text-9xl mx-auto my-auto icon col-start-4 col-span-1 row-start-2 row-span-1" />
-           <FaGitlab className=" text-9xl mx-auto my-auto icon col-start-5 col-span-1 row-start-2 row-span-1" />
-           <FaPhp className=" text-9xl mx-auto my-auto icon col-start-1 col-span-1 row-start-3 row-span-1" />
-           <SiMysql className=" text-9xl mx-auto my-auto icon col-start-2 col-span-1 row-start-3 row-span-1" />
-           <FaLaravel className=" text-9xl mx-auto my-auto icon col-start-3 col-span-1 row-start-3 row-span-1" />
-         </div>
-       </div> */}
       </div>
     </div>
   );
