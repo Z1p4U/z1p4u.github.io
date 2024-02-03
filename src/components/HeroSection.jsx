@@ -194,7 +194,10 @@ const HeroSection = () => {
                   />
                 </div>
               </Tilt> */}
-              <div className="bg-[url('/mypic.jpg')] bg-cover h-[500px] flex justify-end align-baseline items-baseline">
+              <div
+                loading="lazy"
+                className="bg-[url('/mypic.jpg')] bg-cover h-[500px] flex justify-end align-baseline items-baseline"
+              >
                 <div
                   style={{ opacity: 1, transform: "none" }}
                   className=" mt-7 text-center"
