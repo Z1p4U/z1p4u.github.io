@@ -179,7 +179,7 @@ const Resume = () => {
                   background: "#162033",
                   color: "#8338ec",
                 }}
-                icon={<MdWorkOutline className=" text-4xl" />}
+                icon={<MdWeb className=" text-4xl" />}
               >
                 <h3 className="vertical-timeline-element-title text-xl">
                   Joined workshops and started seeking Jobs
@@ -199,22 +199,22 @@ const Resume = () => {
                 }}
                 date={
                   <div className=" bg-[#8338ec1A] text-[#bfbecb] w-fit ms-auto rounded-full px-3 ">
-                    15/9/2022 - 20/12/2022
+                    1/7/2022 - Now
                   </div>
                 }
                 iconStyle={{
                   background: "#162033",
                   color: "#8338ec",
                 }}
-                icon={<FaLaravel className=" text-4xl" />}
+                icon={<MdWorkOutline className=" text-4xl" />}
               >
                 <h3 className="vertical-timeline-element-title text-xl">
                   Started a job
                 </h3>
                 <p className=" text-[#bfbecb]">
-                  From 1/8/2023 I started my first job as a Full Stack Web
-                  Developer in YOLO Digital Marketing Agency and start building
-                  my skills and experiences.
+                  From 1/7/2023 I started my first job as a Junior Full Stack
+                  Web Developer in YOLO Digital Marketing Agency and start
+                  building my skills and experiences.
                 </p>
               </VerticalTimelineElement>
             </VerticalTimeline>

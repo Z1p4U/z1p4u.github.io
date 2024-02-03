@@ -62,7 +62,6 @@ const HeroSection = () => {
             </div>
 
             <div className=" text-start typetext text-xl lg:text-2xl mt-8 w-[300px] lg:w-[550px] xl:w-[650px] h-[60px] xl:h-fit">
-              {/* <p className=" me-2 text-blue-500">We</p> */}
               <div className="">
                 <Typewriter
                   options={{
@@ -73,11 +72,11 @@ const HeroSection = () => {
                   onInit={(typewriter) => {
                     typewriter
                       .typeString(
-                        "<span style='color: #8338ec;'>I</span> Am Full Stack Web Developer."
+                        "<span style='color: #8338ec;'>I</span> Am A Full Stack Web Developer."
                       )
                       .changeDeleteSpeed(0.5)
                       .pauseFor(1500)
-                      .deleteChars(28)
+                      .deleteChars(31)
 
                       // .typeString("Have Strong Passion And Eager To Learn.")
                       // .changeDeleteSpeed(0.3)
@@ -119,11 +118,11 @@ const HeroSection = () => {
 
               <ul className=" flex list-none flex-wrap gap-3 sm:gap-4 text-violet-700">
                 <li className="inline-block align-middle ">
-                  <RouteLink
+                  <a
                     href="https://www.facebook.com/profile.php?id=100010478018386"
                     target="_blank"
                     rel=" noopener noreferrer"
-                    className="group relative inline-block h-10 w-10 overflow-hidden border border-white border-opacity-10 text-center align-middle text-lg leading-none text-body rounded "
+                    className="group focus:text-violet-700 relative inline-block h-10 w-10 overflow-hidden border border-white border-opacity-10 text-center align-middle text-lg leading-none text-body rounded "
                   >
                     <span className=" front relative left-0 top-0 flex h-full w-full translate-y-0 transform items-center justify-center rounded bg-grey transition-all duration-500 group-hover:-translate-y-full">
                       <FiFacebook />
@@ -131,14 +130,14 @@ const HeroSection = () => {
                     <span className=" back absolute left-0 top-0 flex h-full w-full translate-y-full items-center justify-center rounded bg-primary text-grey transition-all duration-500 group-hover:translate-y-0">
                       <FiFacebook />
                     </span>
-                  </RouteLink>
+                  </a>
                 </li>
                 <li className="inline-block align-middle">
                   <a
                     href="https://twitter.com/Thant_Zin_Htet"
                     target="_blank"
                     rel=" noopener noreferrer"
-                    className=" hover:text-violet-700 active:text-violet-700 group relative inline-block h-10 w-10 overflow-hidden border border-white border-opacity-10 text-center align-middle text-lg leading-none text-body rounded "
+                    className=" hove focus:text-violet-700 group relative inline-block h-10 w-10 overflow-hidden border border-white border-opacity-10 text-center align-middle text-lg leading-none text-body rounded "
                   >
                     <span className=" front relative left-0 top-0 flex h-full w-full translate-y-0 transform items-center justify-center rounded bg-grey transition-all duration-500 group-hover:-translate-y-full ">
                       <FiTwitter />
@@ -153,7 +152,7 @@ const HeroSection = () => {
                     href="https://github.com/Z1p4U"
                     target="_blank"
                     rel=" noopener noreferrer"
-                    className="group relative inline-block h-10 w-10 overflow-hidden border border-white border-opacity-10 text-center align-middle text-lg leading-none text-body rounded"
+                    className="group focus:text-violet-700 relative inline-block h-10 w-10 overflow-hidden border border-white border-opacity-10 text-center align-middle text-lg leading-none text-body rounded"
                   >
                     <span className=" front relative left-0 top-0 flex h-full w-full translate-y-0 transform items-center justify-center rounded bg-grey transition-all duration-500 group-hover:-translate-y-full">
                       <FiGithub />
@@ -168,7 +167,7 @@ const HeroSection = () => {
                     href="https://www.linkedin.com/in/zip-p-aa3154204/"
                     target="_blank"
                     rel=" noopener noreferrer"
-                    className="group relative inline-block h-10 w-10 overflow-hidden border border-white border-opacity-10 text-center align-middle text-lg leading-none text-body rounded"
+                    className="group focus:text-violet-700 relative inline-block h-10 w-10 overflow-hidden border border-white border-opacity-10 text-center align-middle text-lg leading-none text-body rounded"
                   >
                     <span className=" front relative left-0 top-0 flex h-full w-full translate-y-0 transform items-center justify-center rounded bg-grey transition-all duration-500 group-hover:-translate-y-full">
                       <FiLinkedin />
