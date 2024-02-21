@@ -269,7 +269,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div className="progress-bar-container absolute left-0 top-[60px] md:top-[92px] w-full">
+      <div className="progress-bar-container absolute left-0 top-[60px] w-full">
         <div className="w-full h-1">
           <div
             className="bg-gradient-to-r from-[#667eea] from-20% via-sky-500 via-40% to-emerald-600 to-90% h-1"
