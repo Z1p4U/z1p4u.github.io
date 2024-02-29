@@ -72,7 +72,7 @@ const HeroSection = () => {
                   onInit={(typewriter) => {
                     typewriter
                       .typeString(
-                        "<span style='color: #8338ec;'>I</span> Am A Full Stack Web Developer."
+                        "<span style='color: #8338ec;'>I </span> am a Full Stack Web Developer."
                       )
                       .changeDeleteSpeed(0.5)
                       .pauseFor(1500)
@@ -84,7 +84,7 @@ const HeroSection = () => {
                       // .deleteChars(39)
 
                       .typeString(
-                        "Love Building Beautiful and Maintainable Websites."
+                        "love building beautiful and maintainable websites."
                       )
                       .changeDeleteSpeed(0.3)
                       .pauseFor(1500)
