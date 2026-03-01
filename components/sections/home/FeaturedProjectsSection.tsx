@@ -17,13 +17,13 @@ const featuredProjects = [
   },
   {
     number: "02",
-    title: "City Hospital Mandalay",
+    title: "Zay Yar Lin Photography",
     description:
-      "CMS-driven WordPress website for hospital information, services, and organization profile.",
-    tech: ["WordPress", "PHP", "CMS"],
+      "WordPress portfolio website for photography showcase with editable CMS content.",
+    tech: ["WordPress", "PHP", "Portfolio"],
     category: "CMS",
     year: "2025",
-    href: "https://www.cityhospitalmandalay.com/",
+    href: "https://www.zayyarlinphotography.com/",
   },
   {
     number: "03",
@@ -37,13 +37,13 @@ const featuredProjects = [
   },
   {
     number: "04",
-    title: "The North Creators",
+    title: "Miyama Kuruma",
     description:
-      "Early-era company portfolio website built using static frontend stack and PHP backend setup.",
+      "Static company portfolio website built in early-career period with HTML, CSS, JavaScript, and PHP.",
     tech: ["HTML", "CSS", "JavaScript", "PHP"],
     category: "Company Portfolio",
     year: "2024",
-    href: "https://www.thenorthcreators.com/",
+    href: "https://miyamakuruma.com/",
   },
 ];
 
