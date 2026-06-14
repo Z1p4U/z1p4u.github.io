@@ -56,7 +56,7 @@ export default function RootLayout({
       >
         <StarField />
         <Navbar />
-        <main>{children}</main>
+        <main className="site-motion-shell">{children}</main>
         <Footer />
       </body>
     </html>

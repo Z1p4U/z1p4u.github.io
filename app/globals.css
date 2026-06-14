@@ -90,6 +90,125 @@
   }
 }
 
+/* Site-wide motion */
+@keyframes siteFadeLift {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+    filter: blur(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes siteLineGrow {
+  0% {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+@keyframes siteGlowBreath {
+  0%,
+  100% {
+    box-shadow: 0 0 0 rgba(124, 58, 237, 0);
+  }
+  50% {
+    box-shadow: 0 0 28px rgba(124, 58, 237, 0.14);
+  }
+}
+
+.site-motion-shell {
+  animation: siteFadeLift 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.site-motion-shell section {
+  animation: siteFadeLift 0.75s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.site-motion-shell section:nth-of-type(2) {
+  animation-delay: 0.08s;
+}
+
+.site-motion-shell section:nth-of-type(3) {
+  animation-delay: 0.14s;
+}
+
+.site-motion-shell section:nth-of-type(4) {
+  animation-delay: 0.2s;
+}
+
+.site-motion-shell section:nth-of-type(5) {
+  animation-delay: 0.26s;
+}
+
+.site-motion-shell section .h-px {
+  transform-origin: left center;
+  animation: siteLineGrow 0.65s ease-out both;
+}
+
+.site-motion-shell a,
+.site-motion-shell button,
+.site-motion-shell input,
+.site-motion-shell textarea {
+  transition-duration: 220ms;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.site-motion-shell a:hover,
+.site-motion-shell button:hover {
+  transform: translateY(-1px);
+}
+
+.site-motion-shell input:focus-visible,
+.site-motion-shell textarea:focus-visible,
+.site-motion-shell button:focus-visible,
+.site-motion-shell a:focus-visible {
+  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.16);
+}
+
+.site-motion-shell .rounded-2xl,
+.site-motion-shell .rounded-3xl,
+.site-motion-shell [data-slot="card"] {
+  transition-duration: 260ms;
+  transition-property: border-color, box-shadow, transform, background-color;
+  transition-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.site-motion-shell .rounded-2xl:hover,
+.site-motion-shell [data-slot="card"]:hover {
+  transform: translateY(-3px);
+  animation: siteGlowBreath 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-motion-shell,
+  .site-motion-shell *,
+  .star,
+  .content h1:nth-child(2),
+  .nav2-shell,
+  .nav2-orb {
+    animation: none !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .site-motion-shell a:hover,
+  .site-motion-shell button:hover,
+  .site-motion-shell .rounded-2xl:hover,
+  .site-motion-shell [data-slot="card"]:hover {
+    transform: none;
+  }
+}
+
 /* Starfield animation */
 @keyframes twinkle {
   0%,

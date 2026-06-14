@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Send, Mail, MapPin, Clock, Github, Phone } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -26,8 +26,8 @@ const contactInfo = [
   {
     icon: Mail,
     label: "Email",
-    value: "zipshigoto310801@gmail.com",
-    href: "mailto:zipshigoto310801@gmail.com",
+    value: "thantzinhtet2001@gmail.com",
+    href: "mailto:thantzinhtet2001@gmail.com",
   },
   {
     icon: Phone,
@@ -51,7 +51,7 @@ const contactInfo = [
 
 const socialLinks = [
   { icon: Github, label: "GitHub", href: "https://github.com/Z1p4U" },
-  { icon: Mail, label: "Email", href: "mailto:zipshigoto310801@gmail.com" },
+  { icon: Mail, label: "Email", href: "mailto:thantzinhtet2001@gmail.com" },
 ]
 
 const budgetRanges = [
@@ -71,14 +71,20 @@ export default function ContactPage() {
     message: "",
   })
   const [submitted, setSubmitted] = useState(false)
+  const [isSending, setIsSending] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    setSubmitted(true)
-  }
+  useEffect(() => {
+    if (!new URLSearchParams(window.location.search).has("sent")) {
+      return
+    }
+
+    const frame = window.requestAnimationFrame(() => setSubmitted(true))
+    return () => window.cancelAnimationFrame(frame)
+  }, [])
 
   const resetForm = () => {
     setSubmitted(false)
+    setIsSending(false)
     setFormState({ name: "", email: "", subject: "", budget: "", message: "" })
   }
 
@@ -124,7 +130,22 @@ export default function ContactPage() {
                 </CardContent>
               </Card>
             ) : (
-              <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+              <form
+                action="https://formsubmit.co/thantzinhtet2001@gmail.com"
+                method="POST"
+                onSubmit={() => setIsSending(true)}
+                className="flex flex-col gap-6"
+              >
+                <input type="hidden" name="_subject" value="New portfolio contact form message" />
+                <input type="hidden" name="_template" value="table" />
+                <input type="hidden" name="_captcha" value="false" />
+                <input
+                  type="hidden"
+                  name="_next"
+                  value="https://z1p4u.github.io/contact?sent=true"
+                />
+                <input type="text" name="_honey" className="hidden" tabIndex={-1} autoComplete="off" />
+                <input type="hidden" name="budget" value={formState.budget || "Not selected"} />
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div className="flex flex-col gap-2">
                     <Label htmlFor="name">
@@ -132,6 +153,7 @@ export default function ContactPage() {
                     </Label>
                     <Input
                       id="name"
+                      name="name"
                       type="text"
                       required
                       value={formState.name}
@@ -146,6 +168,7 @@ export default function ContactPage() {
                     </Label>
                     <Input
                       id="email"
+                      name="email"
                       type="email"
                       required
                       value={formState.email}
@@ -163,6 +186,7 @@ export default function ContactPage() {
                     </Label>
                     <Input
                       id="subject"
+                      name="subject"
                       type="text"
                       required
                       value={formState.subject}
@@ -181,6 +205,7 @@ export default function ContactPage() {
                     >
                       <SelectTrigger
                         id="budget"
+                        name="budget"
                         className="w-full h-11 bg-secondary/20 border-border/50 focus-visible:border-primary/50"
                       >
                         <SelectValue placeholder="Select budget" />
@@ -202,6 +227,7 @@ export default function ContactPage() {
                   </Label>
                   <Textarea
                     id="message"
+                    name="message"
                     required
                     rows={6}
                     value={formState.message}
@@ -213,9 +239,10 @@ export default function ContactPage() {
 
                 <Button
                   type="submit"
+                  disabled={isSending}
                   className="w-full sm:w-auto h-11 px-8 rounded-full"
                 >
-                  Send Message
+                  {isSending ? "Sending..." : "Send Message"}
                   <Send className="w-4 h-4" />
                 </Button>
               </form>

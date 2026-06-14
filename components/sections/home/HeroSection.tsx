@@ -13,7 +13,7 @@ const roles = [
 
 const socialLinks = [
   { href: "https://github.com/Z1p4U", icon: Github, label: "GitHub" },
-  { href: "mailto:zipshigoto310801@gmail.com", icon: Mail, label: "Email" },
+  { href: "mailto:thantzinhtet2001@gmail.com", icon: Mail, label: "Email" },
   { href: "tel:+66849920420", icon: Phone, label: "Phone" },
 ];
 

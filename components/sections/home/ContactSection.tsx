@@ -27,11 +27,11 @@ export function ContactSection() {
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
           <Link
-            href="mailto:zipshigoto310801@gmail.com"
+            href="mailto:thantzinhtet2001@gmail.com"
             className="flex items-center gap-3 px-8 py-4 text-muted-foreground hover:text-primary transition-colors"
           >
             <Mail className="w-4 h-4" />
-            zipshigoto310801@gmail.com
+            thantzinhtet2001@gmail.com
           </Link>
         </div>
       </div>
