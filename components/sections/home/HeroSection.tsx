@@ -84,7 +84,22 @@ export function HeroSection() {
         </p>
 
         {/* CTA + Socials row */}
-        <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-6">
+        <div className="mt-10 flex flex-col items-start gap-6">
+          <div className="flex items-center gap-3">
+            {socialLinks.map((social) => (
+              <Link
+                key={social.label}
+                href={social.href}
+                target={social.href.startsWith("http") ? "_blank" : undefined}
+                rel={social.href.startsWith("http") ? "noreferrer" : undefined}
+                aria-label={social.label}
+                className="p-2.5 text-muted-foreground hover:text-primary transition-colors"
+              >
+                <social.icon className="w-5 h-5" />
+              </Link>
+            ))}
+          </div>
+
           <div className="flex items-center gap-4">
             <Link
               href="/contact"
@@ -98,21 +113,6 @@ export function HeroSection() {
             >
               View Work
             </Link>
-          </div>
-
-          <div className="sm:ml-auto flex items-center gap-3">
-            {socialLinks.map((social) => (
-              <Link
-                key={social.label}
-                href={social.href}
-                target={social.href.startsWith("http") ? "_blank" : undefined}
-                rel={social.href.startsWith("http") ? "noreferrer" : undefined}
-                aria-label={social.label}
-                className="p-2.5 text-muted-foreground hover:text-primary transition-colors"
-              >
-                <social.icon className="w-5 h-5" />
-              </Link>
-            ))}
           </div>
         </div>
 

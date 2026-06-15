@@ -1,5 +1,10 @@
+"use client";
+
 import { Github, Mail, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import MagnetBtn from "@/components/global/MagnetBtn";
+import { cn } from "@/lib/utils";
 
 const socialLinks = [
   { href: "https://github.com/Z1p4U", icon: Github, label: "GitHub" },
@@ -14,10 +19,12 @@ const footerLinks = [
 ];
 
 export function Footer() {
+  const pathname = usePathname();
+
   return (
     <footer className="relative z-10 mt-20">
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
       <div className="mx-auto max-w-7xl px-6 lg:px-16 pt-12 pb-7 rounded-t-3xl border-t border-primary/20 bg-gradient-to-b from-secondary/50 to-background/90 backdrop-blur-sm">
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-10">
           <div>
             <Link
@@ -34,16 +41,30 @@ export function Footer() {
             </p>
           </div>
 
-          <nav className="flex flex-wrap items-center gap-6">
-            {footerLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-xs uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors"
-              >
-                {link.label}
-              </Link>
-            ))}
+          <nav
+            className="flex flex-wrap items-center gap-x-6 gap-y-3"
+            aria-label="Footer navigation"
+          >
+            {footerLinks.map((link) => {
+              const isActive = pathname === link.href;
+
+              return (
+                <MagnetBtn key={link.href} strength={0.32}>
+                  <Link
+                    href={link.href}
+                    aria-current={isActive ? "page" : undefined}
+                    className={cn(
+                      "inline-flex items-center py-2 text-xs uppercase tracking-[0.2em] transition-colors duration-200",
+                      isActive
+                        ? "font-semibold text-primary"
+                        : "text-muted-foreground hover:text-primary",
+                    )}
+                  >
+                    {link.label}
+                  </Link>
+                </MagnetBtn>
+              );
+            })}
           </nav>
 
           <div className="flex items-center gap-3">

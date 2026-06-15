@@ -3,6 +3,7 @@ import { Inter, Geist_Mono } from "next/font/google";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { StarField } from "@/components/star-field";
+import { PageTransition } from "@/components/page-transition";
 import "./globals.css";
 
 const _inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -56,7 +57,9 @@ export default function RootLayout({
       >
         <StarField />
         <Navbar />
-        <main className="site-motion-shell">{children}</main>
+        <main className="site-motion-shell">
+          <PageTransition>{children}</PageTransition>
+        </main>
         <Footer />
       </body>
     </html>

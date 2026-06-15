@@ -93,15 +93,15 @@ export function SkillsSection() {
           {skills.map((skill, i) => (
             <div
               key={skill.title}
-              className={`group relative rounded-2xl border border-border/40 bg-secondary/20 p-7 transition-all duration-500 hover:border-primary/30 hover:bg-secondary/40 ${
+              className={`group relative rounded-2xl border border-border/40 bg-secondary/20 p-7 transition-all duration-300 hover:border-primary/20 hover:bg-secondary/25 ${
                 inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
               }`}
               style={{ transitionDelay: `${i * 80}ms` }}
             >
-              <div className="flex items-center justify-center w-11 h-11 rounded-xl bg-primary/10 text-primary mb-5 group-hover:bg-primary/20 transition-colors">
+              <div className="flex items-center justify-center w-11 h-11 rounded-xl bg-primary/10 text-primary mb-5 group-hover:bg-primary/15 transition-colors">
                 <skill.icon className="w-5 h-5" />
               </div>
-              <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
+              <h3 className="text-lg font-semibold text-foreground mb-2 transition-colors group-hover:text-foreground">
                 {skill.title}
               </h3>
               <p className="text-sm text-muted-foreground leading-relaxed mb-5">

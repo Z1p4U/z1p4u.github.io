@@ -48,8 +48,9 @@ export function Navbar() {
           <MagnetBtn key={link.href} strength={variant === "scrolled" ? 0.52 : 0.45}>
             <Link
               href={link.href}
+              aria-current={isActive ? "page" : undefined}
               className={cn(
-                "inline-flex items-center px-3.5 py-1.5 text-[16px] font-medium transition-colors rounded-full",
+                "relative inline-flex items-center px-3.5 py-1.5 text-[16px] font-medium transition-colors rounded-full",
                 variant === "default" &&
                   (isActive
                     ? "text-primary"
