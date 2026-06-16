@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  type CSSProperties,
   type ReactNode,
   useCallback,
   useEffect,
@@ -8,7 +9,10 @@ import {
   useState,
 } from "react";
 import { usePathname } from "next/navigation";
-import { InitialHomeLoader } from "@/components/initial-home-loader";
+import {
+  InitialHomeLoader,
+  INITIAL_HOME_LOADER_BACKGROUND,
+} from "@/components/initial-home-loader";
 
 type PageTransitionProps = {
   children: ReactNode;
@@ -35,6 +39,10 @@ const scrollLockKeys = new Set([
   "PageDown",
   "PageUp",
 ]);
+
+const routeVeilStyle: CSSProperties = {
+  background: INITIAL_HOME_LOADER_BACKGROUND,
+};
 
 export function PageTransition({ children }: PageTransitionProps) {
   const pathname = usePathname();
@@ -210,6 +218,7 @@ export function PageTransition({ children }: PageTransitionProps) {
         <div
           key={`route-veil-${pathname}`}
           className=" w-full h-screen route-transition-veil fixed inset-0 z-90 flex items-center justify-center pointer-events-none"
+          style={routeVeilStyle}
           aria-hidden
         >
           <span className="route-transition-label">{label}</span>

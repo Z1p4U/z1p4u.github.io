@@ -267,11 +267,14 @@
 }
 
 .route-transition-label {
-  color: rgba(232, 232, 240, 0.72);
-  font-size: 5.4rem;
+  color: rgba(245, 245, 250, 0.68);
+  font-family: var(--font-geist-mono), "SFMono-Regular", Consolas,
+    "Liberation Mono", monospace;
+  font-size: 3.6rem;
   font-weight: 500;
   letter-spacing: 0;
   line-height: 1;
+  text-transform: uppercase;
   animation: routeLabelFade 0.66s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
@@ -366,6 +369,8 @@ body:has(.route-transition-veil) {
   justify-content: center;
   margin: 0;
   color: rgba(245, 245, 250, 0.94);
+  font-family: var(--font-inter), "Inter", "Noto Sans", "Noto Sans Myanmar",
+    "Noto Sans JP", system-ui, sans-serif;
   font-size: 5.4rem;
   font-weight: 500;
   letter-spacing: 0;
@@ -405,9 +410,12 @@ body:has(.route-transition-veil) {
     --home-intro-font-size: 4rem;
   }
 
-  .route-transition-label,
   .home-intro-greeting {
     font-size: 4rem;
+  }
+
+  .route-transition-label {
+    font-size: 3rem;
   }
 }
 
@@ -416,9 +424,12 @@ body:has(.route-transition-veil) {
     --home-intro-font-size: 2.75rem;
   }
 
-  .route-transition-label,
   .home-intro-greeting {
     font-size: 2.75rem;
+  }
+
+  .route-transition-label {
+    font-size: 2rem;
   }
 
   .home-intro-content {

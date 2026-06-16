@@ -8,7 +8,7 @@ const PROGRESS_DURATION_MS = 3000;
 const GREETING_STEP_MS = PROGRESS_DURATION_MS / greetings.length;
 const EXIT_DURATION_MS = 840;
 const TEXT_FADE_MS = 150;
-const LOADER_BACKGROUND =
+export const INITIAL_HOME_LOADER_BACKGROUND =
   "linear-gradient(135deg, rgba(124, 58, 237, 0.24) 0%, rgba(17, 16, 21, 0.98) 34%, #08070b 68%, rgba(14, 165, 233, 0.14) 100%), #08070b";
 
 type InitialHomeLoaderProps = {
@@ -71,7 +71,7 @@ export function InitialHomeLoader({ onDone }: InitialHomeLoaderProps) {
     justifyContent: "center",
     overflow: "hidden",
     padding: "2rem",
-    background: LOADER_BACKGROUND,
+    background: INITIAL_HOME_LOADER_BACKGROUND,
     color: "rgba(245, 245, 250, 0.94)",
     pointerEvents: "auto",
     cursor: "wait",
