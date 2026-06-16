@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 const socialLinks = [
   { href: "https://github.com/Z1p4U", icon: Github, label: "GitHub" },
-  { href: "mailto:thantzinhtet2001@gmail.com", icon: Mail, label: "Email" },
+  { href: "mailto:zipshigoto310801@gmail.com", icon: Mail, label: "Email" },
 ];
 
 const footerLinks = [

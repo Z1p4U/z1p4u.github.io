@@ -1,39 +1,39 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { Send, Mail, MapPin, Clock, Github, Phone } from "lucide-react"
+import { useEffect, useState } from "react";
+import { Send, Mail, MapPin, Clock, Github, Phone } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 
 const contactInfo = [
   {
     icon: Mail,
     label: "Email",
-    value: "thantzinhtet2001@gmail.com",
-    href: "mailto:thantzinhtet2001@gmail.com",
+    value: "zipshigoto310801@gmail.com",
+    href: "mailto:zipshigoto310801@gmail.com",
   },
   {
     icon: Phone,
     label: "Phone",
-    value: "+95 9791643043 / +66 84 992 0420",
-    href: "tel:+66849920420",
+    value: "+95 979 164 3043 / +84 39 975 4064",
+    href: "tel:+84399754064",
   },
   {
     icon: MapPin,
@@ -47,12 +47,12 @@ const contactInfo = [
     value: "Usually within 24 hours",
     href: null,
   },
-]
+];
 
 const socialLinks = [
   { icon: Github, label: "GitHub", href: "https://github.com/Z1p4U" },
-  { icon: Mail, label: "Email", href: "mailto:thantzinhtet2001@gmail.com" },
-]
+  { icon: Mail, label: "Email", href: "mailto:zipshigoto310801@gmail.com" },
+];
 
 const budgetRanges = [
   { value: "100-300", label: "$100 - $300" },
@@ -60,7 +60,7 @@ const budgetRanges = [
   { value: "700-1500", label: "$700 - $1,500" },
   { value: "1500-3000", label: "$1,500 - $3,000" },
   { value: "3000+", label: "$3,000+" },
-]
+];
 
 export default function ContactPage() {
   const [formState, setFormState] = useState({
@@ -69,24 +69,24 @@ export default function ContactPage() {
     subject: "",
     budget: "",
     message: "",
-  })
-  const [submitted, setSubmitted] = useState(false)
-  const [isSending, setIsSending] = useState(false)
+  });
+  const [submitted, setSubmitted] = useState(false);
+  const [isSending, setIsSending] = useState(false);
 
   useEffect(() => {
     if (!new URLSearchParams(window.location.search).has("sent")) {
-      return
+      return;
     }
 
-    const frame = window.requestAnimationFrame(() => setSubmitted(true))
-    return () => window.cancelAnimationFrame(frame)
-  }, [])
+    const frame = window.requestAnimationFrame(() => setSubmitted(true));
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
 
   const resetForm = () => {
-    setSubmitted(false)
-    setIsSending(false)
-    setFormState({ name: "", email: "", subject: "", budget: "", message: "" })
-  }
+    setSubmitted(false);
+    setIsSending(false);
+    setFormState({ name: "", email: "", subject: "", budget: "", message: "" });
+  };
 
   return (
     <section id="contact" className="relative z-10 pt-32 pb-24 px-6">
@@ -99,8 +99,9 @@ export default function ContactPage() {
             {"Let's Build Something Great"}
           </h1>
           <p className="text-muted-foreground leading-relaxed max-w-2xl">
-            Have a project in mind or just want to say hello? Fill out the form below or reach out
-            through any of my channels. I typically respond within 24 hours.
+            Have a project in mind or just want to say hello? Fill out the form
+            below or reach out through any of my channels. I typically respond
+            within 24 hours.
           </p>
         </div>
 
@@ -115,7 +116,9 @@ export default function ContactPage() {
                   </div>
                   <CardTitle className="text-xl">Message Sent!</CardTitle>
                   <CardDescription className="max-w-sm">
-                    {"Thank you for reaching out. I'll get back to you as soon as possible."}
+                    {
+                      "Thank you for reaching out. I'll get back to you as soon as possible."
+                    }
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="pt-0 flex justify-center">
@@ -131,12 +134,16 @@ export default function ContactPage() {
               </Card>
             ) : (
               <form
-                action="https://formsubmit.co/thantzinhtet2001@gmail.com"
+                action="https://formsubmit.co/zipshigoto310801@gmail.com"
                 method="POST"
                 onSubmit={() => setIsSending(true)}
                 className="flex flex-col gap-6"
               >
-                <input type="hidden" name="_subject" value="New portfolio contact form message" />
+                <input
+                  type="hidden"
+                  name="_subject"
+                  value="New portfolio contact form message"
+                />
                 <input type="hidden" name="_template" value="table" />
                 <input type="hidden" name="_captcha" value="false" />
                 <input
@@ -144,35 +151,45 @@ export default function ContactPage() {
                   name="_next"
                   value="https://z1p4u.github.io/contact?sent=true"
                 />
-                <input type="text" name="_honey" className="hidden" tabIndex={-1} autoComplete="off" />
-                <input type="hidden" name="budget" value={formState.budget || "Not selected"} />
+                <input
+                  type="text"
+                  name="_honey"
+                  className="hidden"
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
+                <input
+                  type="hidden"
+                  name="budget"
+                  value={formState.budget || "Not selected"}
+                />
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div className="flex flex-col gap-2">
-                    <Label htmlFor="name">
-                      Name
-                    </Label>
+                    <Label htmlFor="name">Name</Label>
                     <Input
                       id="name"
                       name="name"
                       type="text"
                       required
                       value={formState.name}
-                      onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+                      onChange={(e) =>
+                        setFormState({ ...formState, name: e.target.value })
+                      }
                       placeholder="Your name"
                       className="h-11 bg-secondary/20 border-border/50 focus-visible:border-primary/50"
                     />
                   </div>
                   <div className="flex flex-col gap-2">
-                    <Label htmlFor="email">
-                      Email
-                    </Label>
+                    <Label htmlFor="email">Email</Label>
                     <Input
                       id="email"
                       name="email"
                       type="email"
                       required
                       value={formState.email}
-                      onChange={(e) => setFormState({ ...formState, email: e.target.value })}
+                      onChange={(e) =>
+                        setFormState({ ...formState, email: e.target.value })
+                      }
                       placeholder="your@email.com"
                       className="h-11 bg-secondary/20 border-border/50 focus-visible:border-primary/50"
                     />
@@ -181,27 +198,27 @@ export default function ContactPage() {
 
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div className="flex flex-col gap-2">
-                    <Label htmlFor="subject">
-                      Subject
-                    </Label>
+                    <Label htmlFor="subject">Subject</Label>
                     <Input
                       id="subject"
                       name="subject"
                       type="text"
                       required
                       value={formState.subject}
-                      onChange={(e) => setFormState({ ...formState, subject: e.target.value })}
+                      onChange={(e) =>
+                        setFormState({ ...formState, subject: e.target.value })
+                      }
                       placeholder="Project type"
                       className="h-11 bg-secondary/20 border-border/50 focus-visible:border-primary/50"
                     />
                   </div>
                   <div className="flex flex-col gap-2">
-                    <Label htmlFor="budget">
-                      Budget Range
-                    </Label>
+                    <Label htmlFor="budget">Budget Range</Label>
                     <Select
                       value={formState.budget || undefined}
-                      onValueChange={(value) => setFormState({ ...formState, budget: value })}
+                      onValueChange={(value) =>
+                        setFormState({ ...formState, budget: value })
+                      }
                     >
                       <SelectTrigger
                         id="budget"
@@ -222,16 +239,16 @@ export default function ContactPage() {
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <Label htmlFor="message">
-                    Message
-                  </Label>
+                  <Label htmlFor="message">Message</Label>
                   <Textarea
                     id="message"
                     name="message"
                     required
                     rows={6}
                     value={formState.message}
-                    onChange={(e) => setFormState({ ...formState, message: e.target.value })}
+                    onChange={(e) =>
+                      setFormState({ ...formState, message: e.target.value })
+                    }
                     placeholder="Tell me about your project..."
                     className="min-h-36 bg-secondary/20 border-border/50 focus-visible:border-primary/50 resize-none"
                   />
@@ -310,5 +327,5 @@ export default function ContactPage() {
         </div>
       </div>
     </section>
-  )
+  );
 }
