@@ -84,6 +84,7 @@ export function InitialHomeLoader({ onDone }: InitialHomeLoaderProps) {
     right: "0",
     bottom: "0",
     left: "0",
+    maxHeight: "100vh",
   };
 
   const contentStyle: CSSProperties = {

@@ -8,6 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { createPortal } from "react-dom";
 import { usePathname } from "next/navigation";
 import {
   InitialHomeLoader,
@@ -50,19 +51,38 @@ export function PageTransition({ children }: PageTransitionProps) {
   const previousPathnameRef = useRef(pathname);
   const shouldShowInitialIntro = pathname === "/";
   const introActiveRef = useRef(shouldShowInitialIntro);
+  const [isHydrated, setIsHydrated] = useState(false);
   const [showIntro, setShowIntro] = useState(shouldShowInitialIntro);
   const [showTransition, setShowTransition] = useState(false);
   const isMotionBlocking = showIntro || showTransition;
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      setIsHydrated(true);
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+    };
+  }, []);
 
   useEffect(() => {
     if (!isMotionBlocking) {
       return;
     }
 
+    const shouldResetScroll = showIntro && pathname === "/";
     const root = document.documentElement;
     const body = document.body;
-    const scrollX = window.scrollX;
-    const scrollY = window.scrollY;
+    const previousScrollRestoration = window.history.scrollRestoration;
+
+    if (shouldResetScroll) {
+      window.history.scrollRestoration = "manual";
+      window.scrollTo(0, 0);
+    }
+
+    const scrollX = shouldResetScroll ? 0 : window.scrollX;
+    const scrollY = shouldResetScroll ? 0 : window.scrollY;
     const scrollbarWidth = window.innerWidth - root.clientWidth;
     const previousRootOverflow = root.style.overflow;
     const previousRootOverscroll = root.style.overscrollBehavior;
@@ -175,9 +195,10 @@ export function PageTransition({ children }: PageTransitionProps) {
       body.style.touchAction = previousBodyTouchAction;
       body.style.cursor = previousBodyCursor;
       body.style.paddingRight = previousBodyPaddingRight;
+      window.history.scrollRestoration = previousScrollRestoration;
       window.scrollTo(scrollX, scrollY);
     };
-  }, [isMotionBlocking]);
+  }, [isMotionBlocking, pathname, showIntro]);
 
   useEffect(() => {
     if (previousPathnameRef.current === pathname) {
@@ -208,22 +229,35 @@ export function PageTransition({ children }: PageTransitionProps) {
     setShowIntro(false);
   }, []);
 
+  const portalRoot = isHydrated ? document.body : null;
+
   return (
     <>
-      {showIntro ? <InitialHomeLoader onDone={handleIntroDone} /> : null}
-      {isMotionBlocking ? (
-        <span className="page-motion-fake-scrollbar" aria-hidden />
-      ) : null}
-      {showTransition ? (
-        <div
-          key={`route-veil-${pathname}`}
-          className=" w-full h-screen route-transition-veil fixed inset-0 z-90 flex items-center justify-center pointer-events-none"
-          style={routeVeilStyle}
-          aria-hidden
-        >
-          <span className="route-transition-label">{label}</span>
-        </div>
-      ) : null}
+      {portalRoot && showIntro
+        ? createPortal(
+            <InitialHomeLoader onDone={handleIntroDone} />,
+            portalRoot,
+          )
+        : null}
+      {portalRoot && isMotionBlocking
+        ? createPortal(
+            <span className="page-motion-fake-scrollbar" aria-hidden />,
+            portalRoot,
+          )
+        : null}
+      {portalRoot && showTransition
+        ? createPortal(
+            <div
+              key={`route-veil-${pathname}`}
+              className="route-transition-veil"
+              style={routeVeilStyle}
+              aria-hidden
+            >
+              <span className="route-transition-label">{label}</span>
+            </div>,
+            portalRoot,
+          )
+        : null}
       <div key={`page-frame-${pathname}`} className="page-transition-frame">
         {children}
       </div>
