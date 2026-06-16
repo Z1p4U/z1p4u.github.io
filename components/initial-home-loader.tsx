@@ -80,7 +80,10 @@ export function InitialHomeLoader({ onDone }: InitialHomeLoaderProps) {
     backfaceVisibility: "hidden",
     willChange: "transform",
     animation: "none",
-    height: "100vh",
+    top: "0",
+    right: "0",
+    bottom: "0",
+    left: "0",
   };
 
   const contentStyle: CSSProperties = {

@@ -15,36 +15,36 @@ const skills = [
     icon: Code2,
     title: "Frontend Development",
     description:
-      "React, Next.js, TypeScript, and Tailwind CSS. Building beautiful, responsive, and performant user interfaces.",
-    techs: ["React", "Next.js", "TypeScript", "Tailwind CSS"],
+      "Building beautiful, responsive, and highly performant user interfaces with modern frameworks and type-safe code.",
+    techs: ["React", "Next.js", "TypeScript", "Tailwind CSS", "HTML5/CSS3"],
   },
   {
     icon: Server,
     title: "Backend Development",
     description:
-      "PHP, Laravel, and Node.js. Building REST APIs, server-side workflows, and maintainable backend logic.",
-    techs: ["PHP", "Laravel", "Node.js", "REST API"],
+      "Designing robust server-side architectures, scalable database schemas, and secure, RESTful APIs.",
+    techs: ["Node.js", "Laravel", "C#/.NET"],
   },
   {
     icon: Smartphone,
     title: "Mobile Development",
     description:
-      "Cross-platform mobile apps with React Native. Native-like performance on both iOS and Android.",
+      "Developing seamless, cross-platform mobile applications with native-like performance and custom device features.",
     techs: ["React Native", "Expo"],
   },
   {
     icon: ShoppingCart,
     title: "E-Commerce Solutions",
     description:
-      "Online shops with WooCommerce or custom React stacks, including checkout and product management.",
-    techs: ["WooCommerce", "React", "Payment Integration"],
+      "Crafting high-converting online shops using custom full-stack solutions or headless architectures, alongside tailored CMS configurations.",
+    techs: ["Laravel + React", "Node.js + Next.js", "WooCommerce"],
   },
   {
     icon: Database,
     title: "Database & DevOps",
     description:
-      "MySQL, PostgreSQL, MongoDB, Firebase. Version control with Git and containerization with Docker.",
-    techs: ["MySQL", "PostgreSQL", "MongoDB", "Docker"],
+      "Managing relational and non-relational data structures while ensuring smooth deployment and version control workflows.",
+    techs: ["MySQL", "PostgreSQL", "MongoDB", "Firebase", "Git", "Docker"],
   },
   {
     icon: Globe,

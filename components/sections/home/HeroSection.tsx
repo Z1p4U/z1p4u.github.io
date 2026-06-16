@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Github, Mail, Phone, ArrowDown } from "lucide-react";
+import { Download, Github, Mail, Phone, ArrowDown } from "lucide-react";
 import Link from "next/link";
 
 const roles = [
@@ -52,7 +52,7 @@ export function HeroSection() {
         {/* Overline */}
         <div className="flex items-center gap-4 mb-8">
           <div className="h-px w-12 bg-primary" />
-          <span className="text-xs font-mono tracking-[0.3em] text-primary uppercase">
+          <span className="text-xs font-mono text-primary uppercase leading-relaxed">
             Available for freelance & part-time
           </span>
         </div>
@@ -79,7 +79,7 @@ export function HeroSection() {
         {/* Description */}
         <p className="mt-6 text-muted-foreground leading-relaxed max-w-2xl text-base md:text-lg">
           {
-            "Full-stack web developer with 3+ years of experience building e-commerce platforms, POS systems, CMS websites, and mobile apps. Currently working at Ravus Law Firm (since January 2026) and available for freelance and part-time work."
+            "Full-Stack Developer with 3+ years of experience building web applications, mobile apps, e-commerce platforms, CMS solutions, and custom business systems using React, Laravel, Node.js, and React Native. Available for freelance and part-time work."
           }
         </p>
 
@@ -100,7 +100,7 @@ export function HeroSection() {
             ))}
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-4">
             <Link
               href="/contact"
               className="group relative px-8 py-3.5 bg-primary text-primary-foreground font-medium rounded-lg overflow-hidden transition-all hover:shadow-lg hover:shadow-primary/25"
@@ -109,10 +109,18 @@ export function HeroSection() {
             </Link>
             <Link
               href="/project"
-              className="px-8 py-3.5 border border-border text-foreground font-medium rounded-lg hover:border-primary/50 hover:text-primary transition-all"
+              className=" hidden px-8 py-3.5 border border-border text-foreground font-medium rounded-lg hover:border-primary/50 hover:text-primary transition-all"
             >
               View Work
             </Link>
+            <a
+              href="/assets/cv/CV.pdf"
+              download
+              className="inline-flex items-center gap-2 px-8 py-3.5 border border-border text-foreground font-medium rounded-lg hover:border-primary/50 hover:text-primary transition-all"
+            >
+              <Download className="h-4 w-4" />
+              Download CV
+            </a>
           </div>
         </div>
 
