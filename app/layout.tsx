@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     title: "Thant Zin Htet | Full Stack Developer",
     description:
       "Full Stack Developer specializing in React, Next.js, React Native, Laravel, Node.js, NestJS, FastAPI, and TypeScript.",
-    images: ["/assets/images/portfolio-preview.png"],
+    images: ["/portfolio-preview.png"],
   },
 
   icons: {
