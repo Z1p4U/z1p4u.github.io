@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Thant Zin Htet Portfolio
 
-## Getting Started
+Personal portfolio website showcasing my projects, skills, and professional experience as a Full Stack Developer.
 
-First, run the development server:
+## Live Website
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+🌐 https://z1p4u.github.io/
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## About
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Full Stack Developer with 3+ years of experience building:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Web Applications
+- Mobile Applications
+- E-commerce Platforms
+- CMS Solutions
+- Custom Business Systems
 
-## Learn More
+## Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
+### Frontend
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- React
+- Next.js
+- TypeScript
+- Tailwind CSS
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Backend
 
-## Deploy on Vercel
+- Laravel
+- Node.js
+- NestJS
+- FastAPI
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Mobile
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- React Native
+
+### Database & DevOps
+
+- PostgreSQL
+- MySQL
+- Docker
+- AWS
+
+## Contact
+
+- Portfolio: https://z1p4u.github.io/
+- GitHub: https://github.com/Z1p4U
+- LinkedIn: https://www.linkedin.com/in/YOUR-LINKEDIN
+
+## Available For
+
+- Freelance Projects
+<!-- - Fulltime Opportunities -->
+- Part-time Opportunities
+
+Remote preferred. Open to on-site opportunities in Thailand and Vietnam.
