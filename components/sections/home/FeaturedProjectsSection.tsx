@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import gsap from "gsap";
@@ -24,6 +25,7 @@ const featuredProjects = [
     preview: {
       eyebrow: "Storefront",
       accent: "#4ade80",
+      image: "/assets/projects/MTL Express E-commerce .png",
       gradient:
         "radial-gradient(circle at 22% 18%, rgba(74, 222, 128, 0.7), transparent 34%), linear-gradient(135deg, #0f172a 0%, #1f2937 48%, #020617 100%)",
     },
@@ -40,6 +42,7 @@ const featuredProjects = [
     preview: {
       eyebrow: "Portfolio",
       accent: "#f59e0b",
+      image: "/assets/projects/Zay Yar Lin Photography .png",
       gradient:
         "radial-gradient(circle at 75% 18%, rgba(245, 158, 11, 0.75), transparent 32%), linear-gradient(135deg, #211711 0%, #3f2d20 45%, #0c0a09 100%)",
     },
@@ -56,6 +59,7 @@ const featuredProjects = [
     preview: {
       eyebrow: "Application",
       accent: "#38bdf8",
+      image: "/assets/projects/Nawaratt Medical .png",
       gradient:
         "radial-gradient(circle at 28% 18%, rgba(56, 189, 248, 0.72), transparent 34%), linear-gradient(135deg, #082f49 0%, #0f172a 48%, #020617 100%)",
     },
@@ -72,11 +76,22 @@ const featuredProjects = [
     preview: {
       eyebrow: "Website",
       accent: "#fb7185",
+      image: "/assets/projects/Miyama Kuruma.png",
       gradient:
         "radial-gradient(circle at 74% 22%, rgba(251, 113, 133, 0.75), transparent 34%), linear-gradient(135deg, #1f1020 0%, #312e81 48%, #020617 100%)",
     },
   },
 ];
+
+function isMobileProject(project: (typeof featuredProjects)[number]) {
+  return project.category === "Mobile Apps";
+}
+
+function getFloatingPreviewSize(project: (typeof featuredProjects)[number]) {
+  return isMobileProject(project)
+    ? { width: 320, height: 660 }
+    : { width: 430, height: 410 };
+}
 
 function useInView(ref: React.RefObject<HTMLElement | null>) {
   const [isInView, setIsInView] = useState(false);
@@ -110,6 +125,8 @@ export function FeaturedProjectsSection() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
   const activeProject = featuredProjects[activeIndex];
+  const activePreviewSize = getFloatingPreviewSize(activeProject);
+  const activeIsMobile = isMobileProject(activeProject);
 
   useEffect(() => {
     const preview = previewRef.current;
@@ -163,15 +180,18 @@ export function FeaturedProjectsSection() {
     };
   }, []);
 
-  const moveFloatingLayers = (event: MouseEvent<HTMLElement>) => {
+  const moveFloatingLayers = (
+    event: MouseEvent<HTMLElement>,
+    projectIndex = activeIndex,
+  ) => {
     const section = sectionRef.current;
     if (!section) return;
 
     const rect = section.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
-    const previewWidth = 430;
-    const previewHeight = 300;
+    const { width: previewWidth, height: previewHeight } =
+      getFloatingPreviewSize(featuredProjects[projectIndex]);
     const clampedX = Math.min(
       Math.max(x - 72, previewWidth / 2),
       rect.width - previewWidth / 2,
@@ -192,7 +212,7 @@ export function FeaturedProjectsSection() {
   const showFloatingLayers = (index: number, event: MouseEvent<HTMLElement>) => {
     setActiveIndex(index);
     setIsHovering(true);
-    moveFloatingLayers(event);
+    moveFloatingLayers(event, index);
 
     if (!previewRef.current || !cursorRef.current) return;
 
@@ -260,7 +280,11 @@ export function FeaturedProjectsSection() {
         <div
           ref={previewRef}
           aria-hidden="true"
-          className="pointer-events-none absolute left-0 top-0 z-20 hidden h-[300px] w-[430px] overflow-hidden rounded-[1.35rem] border border-primary/20 bg-secondary/90 shadow-[0_32px_90px_rgba(0,0,0,0.45)] md:block"
+          className="pointer-events-none absolute left-0 top-0 z-20 hidden overflow-hidden rounded-[1.35rem] border border-primary/20 bg-secondary/90 shadow-[0_32px_90px_rgba(0,0,0,0.45)] transition-[width,height] duration-300 md:block"
+          style={{
+            width: activePreviewSize.width,
+            height: activePreviewSize.height,
+          }}
         >
           <div
             className="absolute inset-0 opacity-90 transition-[background] duration-500"
@@ -275,21 +299,40 @@ export function FeaturedProjectsSection() {
               <span>{activeProject.preview.eyebrow}</span>
               <span>{activeProject.year}</span>
             </div>
-            <div className="absolute left-5 right-5 top-16 h-24 overflow-hidden rounded-xl border border-white/10 bg-black/30">
-              <div
-                className="absolute inset-0 opacity-85"
-                style={{ background: activeProject.preview.gradient }}
-              />
-              <div className="absolute inset-5 grid grid-cols-4 gap-2">
-                <span className="rounded bg-white/70" />
-                <span className="rounded bg-white/25" />
-                <span className="rounded bg-white/40" />
-                <span className="rounded bg-white/15" />
-                <span className="col-span-2 rounded bg-black/30" />
-                <span className="col-span-2 rounded bg-white/25" />
-              </div>
+            <div
+              className={`absolute top-16 overflow-hidden rounded-xl border border-white/10 bg-black/30 ${
+                activeIsMobile
+                  ? "left-1/2 w-[68%] -translate-x-1/2 aspect-[1/2.196]"
+                  : "left-5 right-5 aspect-[2/1]"
+              }`}
+            >
+              {activeProject.preview.image ? (
+                <Image
+                  src={activeProject.preview.image}
+                  alt={`${activeProject.title} preview`}
+                  fill
+                  unoptimized
+                  sizes="430px"
+                  className="object-cover object-top opacity-90"
+                />
+              ) : (
+                <>
+                  <div
+                    className="absolute inset-0 opacity-85"
+                    style={{ background: activeProject.preview.gradient }}
+                  />
+                  <div className="absolute inset-5 grid grid-cols-4 gap-2">
+                    <span className="rounded bg-white/70" />
+                    <span className="rounded bg-white/25" />
+                    <span className="rounded bg-white/40" />
+                    <span className="rounded bg-white/15" />
+                    <span className="col-span-2 rounded bg-black/30" />
+                    <span className="col-span-2 rounded bg-white/25" />
+                  </div>
+                </>
+              )}
             </div>
-            <div className="absolute bottom-5 left-5 right-5">
+            <div className="absolute bottom-5 left-5 right-5 pt-5">
               <p className="text-2xl font-semibold leading-none text-white">
                 {activeProject.title}
               </p>

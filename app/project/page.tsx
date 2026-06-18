@@ -1,12 +1,53 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ExternalLink, Github } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const categories = ["All", "Ecommerces", "Mobile Apps", "CMS", "Company Portfolio"];
+const categories = [
+  "All",
+  "Ecommerces",
+  "Mobile Apps",
+  "CMS",
+  "Company Portfolio",
+];
 const PROJECTS_PER_PAGE = 8;
+
+const projectImages: Record<string, string> = {
+  "MTL Express E-commerce": "/assets/projects/MTL Express E-commerce .png",
+  "Lori Gaming Store": "/assets/projects/Lori Gaming Store .png",
+  Nawaratt: "/assets/projects/Nawaratt Medical .png",
+  "Nawaratt Online Shopping": "/assets/projects/Nawaratt Online Shopping .png",
+  "Myat Taw Win": "/assets/projects/Myat Taw Win .png",
+  "Quan Zhu Fuan": "/assets/projects/Quan Zhu Fuan .png",
+  "Power Nine Group": "/assets/projects/Power Nine Group .png",
+  "Golden Eugenia Myanmar": "/assets/projects/Golden Eugenia Myanmar .png",
+  "City Hospital Mandalay": "/assets/projects/City Hospital Mandalay .png",
+  RoyalAlpha: "/assets/projects/RoyalAlpha .png",
+  "Royal Shambella": "/assets/projects/Royal Shambella .png",
+  "Asia Beauty Paradise": "/assets/projects/Asia Beauty Paradise .png",
+  "Beta Alliance Engineering":
+    "/assets/projects/Beta Alliance Engineering .png",
+  "Peace Brothers": "/assets/projects/Peace Brothers .png",
+  "Digital Link": "/assets/projects/Digital Link .png",
+  "Zay Yar Lin Photography": "/assets/projects/Zay Yar Lin Photography .png",
+  "Pao Youth Organization": "/assets/projects/Pao Youth Organization .png",
+  "India Myanmar Chamber of Commerce":
+    "/assets/projects/India Myanmar Chamber of Commerce .png",
+  "International Buddhist Education Center":
+    "/assets/projects/International Buddhist Education Center .png",
+  "The North Creators": "/assets/projects/The North Creators .png",
+  "Htoo Dana Kyaw": "/assets/projects/Htoo Dana Kyaw .png",
+  AccentorCoaching: "/assets/projects/AccentorCoaching .png",
+  "Fly Me Travel & Tours": "/assets/projects/Fly Me Travel & Tours .png",
+  "Kyaw Sofa": "/assets/projects/Kyaw Sofa.png",
+  "Miyama Kuruma": "/assets/projects/Miyama Kuruma.png",
+  "Pan Khone Taw Restaurant": "/assets/projects/Pan Khone Thaw .png",
+  "Nyan Lin Htet Portfolio": "/assets/projects/Nyan Lin Htet Portfolio.png",
+  "Z Land Development": "/assets/projects/Z land development.png",
+};
 
 const projects = [
   {
@@ -67,7 +108,8 @@ const projects = [
   },
   {
     title: "City Hospital Mandalay",
-    description: "WordPress healthcare website for hospital information and branding.",
+    description:
+      "WordPress healthcare website for hospital information and branding.",
     tech: ["WordPress", "PHP", "CMS"],
     category: "CMS",
     href: "https://www.cityhospitalmandalay.com/",
@@ -130,7 +172,8 @@ const projects = [
   },
   {
     title: "India Myanmar Chamber of Commerce",
-    description: "WordPress organization website with structured information pages.",
+    description:
+      "WordPress organization website with structured information pages.",
     tech: ["WordPress", "PHP", "CMS"],
     category: "CMS",
     href: "https://www.imccmyanmar.org/",
@@ -150,6 +193,14 @@ const projects = [
     href: "https://www.omukmyanmar.com/",
   },
   {
+    title: "Nyan Lin Htet Portfolio",
+    description:
+      "React portfolio website for a developer profile, project showcase, and personal branding.",
+    tech: ["React", "JavaScript", "Portfolio"],
+    category: "Company Portfolio",
+    href: "https://nyan-lin-htet.netlify.app/",
+  },
+  {
     title: "The North Creators",
     description:
       "Static company portfolio website built in early-career period.",
@@ -167,8 +218,7 @@ const projects = [
   },
   {
     title: "Htoo Dana Kyaw",
-    description:
-      "Static company website developed during foundational stage.",
+    description: "Static company website developed during foundational stage.",
     tech: ["HTML", "CSS", "JavaScript", "PHP"],
     category: "Company Portfolio",
     href: "https://www.htoodanakyaw.com/",
@@ -209,6 +259,22 @@ const projects = [
     href: "https://miyamakuruma.com/",
   },
   {
+    title: "Pan Khone Taw Restaurant",
+    description:
+      "Static restaurant website for brand presentation, menu browsing, and customer contact.",
+    tech: ["HTML", "CSS", "JavaScript", "Static Site"],
+    category: "Company Portfolio",
+    href: "https://www.pan-khone-taw.com/",
+  },
+  {
+    title: "Z Land Development",
+    description:
+      "Static company website for real estate and land development business presentation.",
+    tech: ["HTML", "CSS", "JavaScript", "Static Site"],
+    category: "Company Portfolio",
+    href: "https://www.zlanddevelopment.com/",
+  },
+  {
     title: "Internal Revenue Department (UI Template)",
     description:
       "UI template contribution project for payment hub interface (listed at end by request).",
@@ -218,6 +284,47 @@ const projects = [
     lowVisibility: true,
   },
 ];
+
+function ProjectPreview({ image, title }: { image?: string; title: string }) {
+  return (
+    <div className="relative mb-5 aspect-[16/10] overflow-hidden rounded-xl border border-border/40 bg-background/60">
+      {image ? (
+        <Image
+          src={image}
+          alt={`${title} website preview`}
+          fill
+          unoptimized
+          sizes="(min-width: 768px) 50vw, 100vw"
+          className="object-cover object-top transition duration-700 group-hover/card:scale-105"
+        />
+      ) : (
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_24%_18%,rgba(124,58,237,0.35),transparent_34%),linear-gradient(135deg,rgba(15,23,42,0.88),rgba(8,7,11,0.96))]" />
+          <div className="absolute inset-x-4 top-4 flex items-center justify-between">
+            <span className="h-2 w-20 rounded-full bg-white/35" />
+            <div className="flex gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-primary/70" />
+              <span className="h-2 w-2 rounded-full bg-white/30" />
+              <span className="h-2 w-2 rounded-full bg-white/20" />
+            </div>
+          </div>
+          <div className="absolute inset-x-4 top-12 grid grid-cols-4 gap-2">
+            <span className="col-span-2 h-14 rounded-lg bg-white/20" />
+            <span className="col-span-2 h-14 rounded-lg bg-primary/25" />
+            <span className="h-10 rounded-lg bg-white/15" />
+            <span className="h-10 rounded-lg bg-white/25" />
+            <span className="col-span-2 h-10 rounded-lg bg-black/30" />
+          </div>
+          <div className="absolute bottom-4 left-4 right-4 space-y-2">
+            <span className="block h-2.5 w-2/3 rounded-full bg-white/35" />
+            <span className="block h-2 w-1/2 rounded-full bg-white/20" />
+          </div>
+        </div>
+      )}
+      <div className="absolute inset-0 bg-gradient-to-t from-background/45 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover/card:opacity-100" />
+    </div>
+  );
+}
 
 export default function ProjectsPage() {
   const [activeCategory, setActiveCategory] = useState("All");
@@ -234,13 +341,18 @@ export default function ProjectsPage() {
   const filtered =
     activeCategory === "All"
       ? orderedProjects
-      : orderedProjects.filter((project) => project.category === activeCategory);
+      : orderedProjects.filter(
+          (project) => project.category === activeCategory,
+        );
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PROJECTS_PER_PAGE));
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filtered.length / PROJECTS_PER_PAGE),
+  );
   const safeCurrentPage = Math.min(currentPage, totalPages);
   const paginatedProjects = filtered.slice(
     (safeCurrentPage - 1) * PROJECTS_PER_PAGE,
-    safeCurrentPage * PROJECTS_PER_PAGE
+    safeCurrentPage * PROJECTS_PER_PAGE,
   );
 
   return (
@@ -280,7 +392,7 @@ export default function ProjectsPage() {
                 "px-4 py-2 text-sm font-medium rounded-full transition-all duration-200",
                 activeCategory === category
                   ? "bg-primary text-primary-foreground"
-                  : "bg-secondary text-muted-foreground hover:text-foreground hover:bg-muted border border-border/50"
+                  : "bg-secondary text-muted-foreground hover:text-foreground hover:bg-muted border border-border/50",
               )}
             >
               {category}
@@ -293,54 +405,61 @@ export default function ProjectsPage() {
             <div
               key={project.title}
               className={cn(
-                "group p-6 rounded-2xl border border-border/50 bg-secondary/30 hover:border-primary/30 transition-all duration-300",
-                project.lowVisibility && "opacity-80"
+                "group/card relative overflow-hidden rounded-2xl border border-border/50 bg-secondary/30 p-5 transition-all duration-500 hover:-translate-y-1 hover:border-primary/30 hover:bg-secondary/40 hover:shadow-[0_24px_70px_rgba(0,0,0,0.28)]",
+                project.lowVisibility && "opacity-80",
               )}
             >
-              <div className="flex items-start justify-between mb-4">
-                <span className="text-xs font-mono text-primary px-3 py-1 rounded-full bg-primary/10">
-                  {project.category}
-                </span>
-                <div className="flex items-center gap-2">
-                  <a
-                    href="https://github.com/Z1p4U"
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label="View GitHub profile"
-                    className="p-2 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all"
-                  >
-                    <Github className="w-4 h-4" />
-                  </a>
-                  {project.href ? (
+              <span className="pointer-events-none absolute inset-0 opacity-0 blur-2xl transition-opacity duration-700 group-hover/card:opacity-100 bg-[radial-gradient(circle_at_50%_0%,rgba(124,58,237,0.28),transparent_42%)]" />
+              <div className="relative z-10">
+                <ProjectPreview
+                  image={projectImages[project.title]}
+                  title={project.title}
+                />
+                <div className="flex items-start justify-between mb-4">
+                  <span className="text-xs font-mono text-primary px-3 py-1 rounded-full bg-primary/10">
+                    {project.category}
+                  </span>
+                  <div className="flex items-center gap-2">
                     <a
-                      href={project.href}
+                      href="https://github.com/Z1p4U"
                       target="_blank"
                       rel="noreferrer"
-                      aria-label={`Visit ${project.title}`}
+                      aria-label="View GitHub profile"
                       className="p-2 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all"
                     >
-                      <ExternalLink className="w-4 h-4" />
+                      <Github className="w-4 h-4" />
                     </a>
-                  ) : null}
+                    {project.href ? (
+                      <a
+                        href={project.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label={`Visit ${project.title}`}
+                        className="p-2 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                      </a>
+                    ) : null}
+                  </div>
                 </div>
-              </div>
 
-              <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors mb-2">
-                {project.title}
-              </h3>
-              <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-                {project.description}
-              </p>
+                <h3 className="text-lg font-bold text-foreground group-hover/card:text-primary transition-colors mb-2">
+                  {project.title}
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                  {project.description}
+                </p>
 
-              <div className="flex flex-wrap gap-2">
-                {project.tech.map((tech) => (
-                  <span
-                    key={tech}
-                    className="px-3 py-1 text-xs font-mono rounded-full bg-muted text-muted-foreground border border-border/30"
-                  >
-                    {tech}
-                  </span>
-                ))}
+                <div className="flex flex-wrap gap-2">
+                  {project.tech.map((tech) => (
+                    <span
+                      key={tech}
+                      className="px-3 py-1 text-xs font-mono rounded-full bg-muted text-muted-foreground border border-border/30"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           ))}
@@ -352,7 +471,7 @@ export default function ProjectsPage() {
               type="button"
               onClick={() =>
                 setCurrentPage((page) =>
-                  Math.max(1, Math.min(page, totalPages) - 1)
+                  Math.max(1, Math.min(page, totalPages) - 1),
                 )
               }
               disabled={safeCurrentPage === 1}
@@ -371,7 +490,7 @@ export default function ProjectsPage() {
                     "w-9 h-9 text-sm rounded-full border transition-colors",
                     safeCurrentPage === page
                       ? "bg-primary text-primary-foreground border-primary"
-                      : "border-border/50 text-muted-foreground hover:text-foreground hover:border-primary/40"
+                      : "border-border/50 text-muted-foreground hover:text-foreground hover:border-primary/40",
                   )}
                 >
                   {page}
@@ -382,7 +501,7 @@ export default function ProjectsPage() {
               type="button"
               onClick={() =>
                 setCurrentPage((page) =>
-                  Math.min(totalPages, Math.min(page, totalPages) + 1)
+                  Math.min(totalPages, Math.min(page, totalPages) + 1),
                 )
               }
               disabled={safeCurrentPage === totalPages}

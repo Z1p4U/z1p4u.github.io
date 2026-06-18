@@ -230,20 +230,22 @@ export function PageTransition({ children }: PageTransitionProps) {
   }, []);
 
   const portalRoot = isHydrated ? document.body : null;
+  const introLoader = <InitialHomeLoader onDone={handleIntroDone} />;
+  const fakeScrollbar = (
+    <span className="page-motion-fake-scrollbar" aria-hidden />
+  );
 
   return (
     <>
-      {portalRoot && showIntro
-        ? createPortal(
-            <InitialHomeLoader onDone={handleIntroDone} />,
-            portalRoot,
-          )
+      {showIntro
+        ? portalRoot
+          ? createPortal(introLoader, portalRoot)
+          : introLoader
         : null}
-      {portalRoot && isMotionBlocking
-        ? createPortal(
-            <span className="page-motion-fake-scrollbar" aria-hidden />,
-            portalRoot,
-          )
+      {isMotionBlocking
+        ? portalRoot
+          ? createPortal(fakeScrollbar, portalRoot)
+          : fakeScrollbar
         : null}
       {portalRoot && showTransition
         ? createPortal(
