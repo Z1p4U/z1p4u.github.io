@@ -7,6 +7,7 @@ import gsap from "gsap";
 import {
   type CSSProperties,
   type MouseEvent,
+  useCallback,
   useEffect,
   useRef,
   useState,
@@ -25,7 +26,7 @@ const featuredProjects = [
     preview: {
       eyebrow: "Storefront",
       accent: "#4ade80",
-      image: "/assets/projects/MTL Express E-commerce .png",
+      image: "/assets/projects/MTLExpressE-commerce.png",
       gradient:
         "radial-gradient(circle at 22% 18%, rgba(74, 222, 128, 0.7), transparent 34%), linear-gradient(135deg, #0f172a 0%, #1f2937 48%, #020617 100%)",
     },
@@ -42,7 +43,7 @@ const featuredProjects = [
     preview: {
       eyebrow: "Portfolio",
       accent: "#f59e0b",
-      image: "/assets/projects/Zay Yar Lin Photography .png",
+      image: "/assets/projects/ZayYarLinPhotography.png",
       gradient:
         "radial-gradient(circle at 75% 18%, rgba(245, 158, 11, 0.75), transparent 32%), linear-gradient(135deg, #211711 0%, #3f2d20 45%, #0c0a09 100%)",
     },
@@ -59,7 +60,7 @@ const featuredProjects = [
     preview: {
       eyebrow: "Application",
       accent: "#38bdf8",
-      image: "/assets/projects/Nawaratt Medical .png",
+      image: "/assets/projects/NawarattMedical.png",
       gradient:
         "radial-gradient(circle at 28% 18%, rgba(56, 189, 248, 0.72), transparent 34%), linear-gradient(135deg, #082f49 0%, #0f172a 48%, #020617 100%)",
     },
@@ -76,7 +77,7 @@ const featuredProjects = [
     preview: {
       eyebrow: "Website",
       accent: "#fb7185",
-      image: "/assets/projects/Miyama Kuruma.png",
+      image: "/assets/projects/MiyamaKuruma.png",
       gradient:
         "radial-gradient(circle at 74% 22%, rgba(251, 113, 133, 0.75), transparent 34%), linear-gradient(135deg, #1f1020 0%, #312e81 48%, #020617 100%)",
     },
@@ -124,9 +125,42 @@ export function FeaturedProjectsSection() {
   const inView = useInView(sectionRef);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
+  const [loadedPreviewImages, setLoadedPreviewImages] = useState<
+    Record<string, boolean>
+  >({});
   const activeProject = featuredProjects[activeIndex];
   const activePreviewSize = getFloatingPreviewSize(activeProject);
   const activeIsMobile = isMobileProject(activeProject);
+  const activePreviewImage = activeProject.preview.image;
+  const isActivePreviewImageLoaded =
+    !activePreviewImage || loadedPreviewImages[activePreviewImage];
+
+  const markPreviewImageLoaded = useCallback((src: string) => {
+    setLoadedPreviewImages((current) =>
+      current[src] ? current : { ...current, [src]: true },
+    );
+  }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    featuredProjects.forEach((project) => {
+      const src = project.preview.image;
+      if (!src) return;
+
+      const image = new window.Image();
+      image.onload = () => {
+        if (isMounted) {
+          markPreviewImageLoaded(src);
+        }
+      };
+      image.src = src;
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [markPreviewImageLoaded]);
 
   useEffect(() => {
     const preview = previewRef.current;
@@ -306,15 +340,32 @@ export function FeaturedProjectsSection() {
                   : "left-5 right-5 aspect-[2/1]"
               }`}
             >
-              {activeProject.preview.image ? (
-                <Image
-                  src={activeProject.preview.image}
-                  alt={`${activeProject.title} preview`}
-                  fill
-                  unoptimized
-                  sizes="430px"
-                  className="object-cover object-top opacity-90"
-                />
+              {activePreviewImage ? (
+                <>
+                  {!isActivePreviewImageLoaded ? (
+                    <div className="absolute inset-0 overflow-hidden bg-white/[0.04]">
+                      <div className="absolute inset-0 animate-pulse bg-[linear-gradient(110deg,transparent_0%,rgba(255,255,255,0.14)_42%,transparent_72%)]" />
+                      <div className="absolute inset-4 grid grid-cols-4 gap-2">
+                        <span className="col-span-2 rounded bg-white/20" />
+                        <span className="col-span-2 rounded bg-white/10" />
+                        <span className="rounded bg-white/10" />
+                        <span className="rounded bg-white/20" />
+                        <span className="col-span-2 rounded bg-white/10" />
+                      </div>
+                    </div>
+                  ) : null}
+                  <Image
+                    src={activePreviewImage}
+                    alt={`${activeProject.title} preview`}
+                    fill
+                    unoptimized
+                    sizes="430px"
+                    onLoad={() => markPreviewImageLoaded(activePreviewImage)}
+                    className={`object-cover object-top transition-opacity duration-300 ${
+                      isActivePreviewImageLoaded ? "opacity-90" : "opacity-0"
+                    }`}
+                  />
+                </>
               ) : (
                 <>
                   <div

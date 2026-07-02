@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import MagnetBtn from "@/components/global/MagnetBtn";
 import { cn } from "@/lib/utils";
+import { setOutlineButtonPosition } from "@/lib/outline-button";
 
 const socialLinks = [
   { href: "https://github.com/Z1p4U", icon: Github, label: "GitHub" },
@@ -49,7 +50,7 @@ export function Footer() {
               const isActive = pathname === link.href;
 
               return (
-                <MagnetBtn key={link.href} strength={0.32}>
+                <MagnetBtn key={link.href} strength={0.28}>
                   <Link
                     href={link.href}
                     aria-current={isActive ? "page" : undefined}
@@ -69,17 +70,22 @@ export function Footer() {
 
           <div className="flex items-center gap-3">
             {socialLinks.map((social) => (
-              <Link
-                key={social.label}
-                href={social.href}
-                target={social.href.startsWith("http") ? "_blank" : undefined}
-                rel={social.href.startsWith("http") ? "noreferrer" : undefined}
-                aria-label={social.label}
-                className="inline-flex items-center gap-2 px-3 py-2 rounded-full border border-border/60 bg-background/40 text-muted-foreground hover:text-primary hover:border-primary/40 transition-all"
-              >
-                <social.icon className="w-4 h-4" />
-                <ArrowUpRight className="w-3.5 h-3.5" />
-              </Link>
+              <MagnetBtn key={social.label} strength={0.26}>
+                <Link
+                  href={social.href}
+                  target={social.href.startsWith("http") ? "_blank" : undefined}
+                  rel={
+                    social.href.startsWith("http") ? "noreferrer" : undefined
+                  }
+                  aria-label={social.label}
+                  className="site-outline-button inline-flex items-center gap-2 px-3 py-2 rounded-full border border-border/60 bg-background/40 text-muted-foreground"
+                  onPointerEnter={setOutlineButtonPosition}
+                  onPointerMove={setOutlineButtonPosition}
+                >
+                  <social.icon className="w-4 h-4" />
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                </Link>
+              </MagnetBtn>
             ))}
           </div>
         </div>

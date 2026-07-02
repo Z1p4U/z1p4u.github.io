@@ -13,7 +13,7 @@ type MagnetBtnProps = {
 export default function MagnetBtn({
   children,
   className,
-  strength = 0.35,
+  strength = 0.34,
 }: MagnetBtnProps) {
   // Magnetic pull intensity: increase `strength` for more movement, decrease for a subtler effect.
   const hitAreaRef = useRef<HTMLDivElement | null>(null);
@@ -25,12 +25,12 @@ export default function MagnetBtn({
     if (!hitArea || !magneticElement) return;
 
     const xTo = gsap.quickTo(magneticElement, "x", {
-      duration: 0.8,
-      ease: "elastic.out(1, 0.35)",
+      duration: 0.82,
+      ease: "elastic.out(1.05, 0.34)",
     });
     const yTo = gsap.quickTo(magneticElement, "y", {
-      duration: 0.8,
-      ease: "elastic.out(1, 0.35)",
+      duration: 0.82,
+      ease: "elastic.out(1.05, 0.34)",
     });
 
     const handleMouseMove = (event: MouseEvent) => {

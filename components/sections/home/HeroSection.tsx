@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Download, Github, Mail, Phone, ArrowDown } from "lucide-react";
 import Link from "next/link";
+import { setOutlineButtonPosition } from "@/lib/outline-button";
 
 const roles = [
   "Full-Stack Web Developer",
@@ -47,7 +48,7 @@ export function HeroSection() {
   }, [displayText, isDeleting, roleIndex]);
 
   return (
-    <section className="relative z-10 min-h-screen flex flex-col justify-center px-6 lg:px-16 pt-24">
+    <section className="relative z-10 min-h-screen flex flex-col justify-center px-6 lg:px-16 pt-30 lg:pt-44">
       <div className="max-w-7xl mx-auto w-full">
         {/* Overline */}
         <div className="flex items-center gap-4 mb-8">
@@ -103,23 +104,29 @@ export function HeroSection() {
           <div className="flex flex-wrap items-center gap-4">
             <Link
               href="/contact"
-              className="group relative px-8 py-3.5 bg-primary text-primary-foreground font-medium rounded-lg overflow-hidden transition-all hover:shadow-lg hover:shadow-primary/25"
+              className="site-filled-button group px-8 py-3.5 font-medium rounded-lg"
+              onPointerEnter={setOutlineButtonPosition}
+              onPointerMove={setOutlineButtonPosition}
             >
-              <span className="relative z-10">{"Let's Talk"}</span>
+              <span>{"Let's Talk"}</span>
             </Link>
             <Link
               href="/project"
-              className=" hidden px-8 py-3.5 border border-border text-foreground font-medium rounded-lg hover:border-primary/50 hover:text-primary transition-all"
+              className="!hidden site-outline-button px-8 py-3.5 border border-border text-foreground font-medium rounded-lg"
+              onPointerEnter={setOutlineButtonPosition}
+              onPointerMove={setOutlineButtonPosition}
             >
-              View Work
+              <span>View Work</span>
             </Link>
             <a
               href="/assets/cv/CV.pdf"
               download
-              className="inline-flex items-center gap-2 px-8 py-3.5 border border-border text-foreground font-medium rounded-lg hover:border-primary/50 hover:text-primary transition-all"
+              className="site-outline-button inline-flex items-center gap-2 px-8 py-3.5 border border-border text-foreground font-medium rounded-lg"
+              onPointerEnter={setOutlineButtonPosition}
+              onPointerMove={setOutlineButtonPosition}
             >
               <Download className="h-4 w-4" />
-              Download CV
+              <span>Download CV</span>
             </a>
           </div>
         </div>

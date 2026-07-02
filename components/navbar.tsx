@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import MagnetBtn from "@/components/global/MagnetBtn";
+import { setOutlineButtonPosition } from "@/lib/outline-button";
+import Image from "next/image";
 
 const navLinks = [
   { href: "/", label: "Home", visible: true },
@@ -40,25 +42,20 @@ export function Navbar() {
     };
   }, [menuOpen]);
 
-  const renderDesktopLinks = (variant: "default" | "scrolled") => (
-    <div className="hidden md:flex items-center gap-3">
+  const renderDesktopLinks = () => (
+    <div className="hidden md:flex items-center gap-2">
       {visibleNavLinks.map((link) => {
         const isActive = pathname === link.href;
         return (
-          <MagnetBtn key={link.href} strength={variant === "scrolled" ? 0.52 : 0.45}>
+          <MagnetBtn key={link.href} strength={0.34}>
             <Link
               href={link.href}
               aria-current={isActive ? "page" : undefined}
               className={cn(
-                "relative inline-flex items-center px-3.5 py-1.5 text-[16px] font-medium transition-colors rounded-full",
-                variant === "default" &&
-                  (isActive
-                    ? "text-primary"
-                    : "text-muted-foreground hover:text-foreground"),
-                variant === "scrolled" &&
-                  (isActive
-                    ? "bg-primary/15 text-primary ring-1 ring-primary/35"
-                    : "text-muted-foreground hover:text-foreground"),
+                "site-nav-link relative inline-flex h-10 items-center px-4 text-[15px] font-medium transition-colors duration-200",
+                isActive
+                  ? "is-active text-primary"
+                  : "text-muted-foreground hover:text-foreground",
               )}
             >
               {link.label}
@@ -71,55 +68,55 @@ export function Navbar() {
 
   return (
     <>
-      {!showScrolledNav && (
-        <header className="absolute top-0 left-0 w-full z-50">
-          <div className="mx-auto max-w-7xl h-[68px] px-6 lg:px-16 flex items-center justify-between">
-            <Link
-              href="/"
-              className="text-2xl font-bold tracking-tight text-foreground"
-              onClick={() => setMenuOpen(false)}
-            >
-              TZH<span className="text-primary">.</span>
-            </Link>
+      <header className="site-nav fixed left-0 top-0 z-50 w-full px-4 pt-4">
+        <div
+          className={cn(
+            "site-nav-shell relative mx-auto flex h-16 w-full max-w-7xl items-center justify-between rounded-full border px-5 lg:px-8",
+            showScrolledNav
+              ? "site-nav-scrolled bg-linear-to-b from-secondary/50 to-background/90 backdrop-blur-sm"
+              : "site-nav-top",
+          )}
+        >
+          <Link
+            href="/"
+            className="inline-flex min-w-21.5 items-center"
+            onClick={() => setMenuOpen(false)}
+            aria-label="Thant Zin Htet home"
+          >
+            <Image
+              src="/assets/logo/logo.png"
+              alt="Thant Zin Htet logo"
+              width={70}
+              height={70}
+              priority
+              className="h-16 w-16 object-contain"
+            />
+          </Link>
 
-            {renderDesktopLinks("default")}
+          {renderDesktopLinks()}
 
-            <button
-              className="burger p-2 flex md:!hidden"
-              onClick={() => setMenuOpen((prev) => !prev)}
-              aria-label="Toggle navigation menu"
-            >
-              {menuOpen ? <X size={22} /> : <Menu size={22} />}
-            </button>
+          <div className="hidden min-w-21.5 justify-end md:flex">
+            <MagnetBtn strength={0.3}>
+              <Link
+                href="/contact"
+                className="site-outline-button rounded-full border border-border/50 px-4 py-2 text-sm font-medium text-muted-foreground"
+                onPointerEnter={setOutlineButtonPosition}
+                onPointerMove={setOutlineButtonPosition}
+              >
+                <span>Hire Me</span>
+              </Link>
+            </MagnetBtn>
           </div>
-        </header>
-      )}
 
-      {showScrolledNav && (
-        <header className="fixed top-0 left-0 w-full z-50 px-4 pt-3">
-          <div className="relative nav2-shell mx-auto max-w-7xl h-[64px] px-5 lg:px-8 rounded-full border border-primary/20 bg-gradient-to-b from-secondary/50 to-background/90 backdrop-blur-sm shadow-[0_12px_35px_rgba(0,0,0,0.35)] flex items-center justify-between">
-            {/* <span className="nav2-orb" aria-hidden /> */}
-
-            <Link
-              href="/"
-              className="text-xl font-bold tracking-tight text-foreground"
-              onClick={() => setMenuOpen(false)}
-            >
-              TZH<span className="text-primary">.</span>
-            </Link>
-
-            {renderDesktopLinks("scrolled")}
-
-            <button
-              className="burger p-2 flex md:!hidden"
-              onClick={() => setMenuOpen((prev) => !prev)}
-              aria-label="Toggle navigation menu"
-            >
-              {menuOpen ? <X size={22} /> : <Menu size={22} />}
-            </button>
-          </div>
-        </header>
-      )}
+          <button
+            className="burger p-2 flex md:!hidden"
+            onClick={() => setMenuOpen((prev) => !prev)}
+            aria-label="Toggle navigation menu"
+          >
+            {menuOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
+      </header>
 
       <div
         className={cn("bg-clip-path md:hidden", menuOpen && "active")}

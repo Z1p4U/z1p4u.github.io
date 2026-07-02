@@ -1,5 +1,8 @@
+"use client";
+
 import { ArrowRight, Mail } from "lucide-react";
 import Link from "next/link";
+import { setOutlineButtonPosition } from "@/lib/outline-button";
 
 export function ContactSection() {
   return (
@@ -21,9 +24,11 @@ export function ContactSection() {
         <div className="mt-8 flex flex-col sm:flex-row items-start gap-6">
           <Link
             href="/contact"
-            className="group flex items-center gap-3 px-8 py-4 bg-primary text-primary-foreground font-medium rounded-lg hover:bg-primary/90 transition-all hover:shadow-lg hover:shadow-primary/20"
+            className="site-filled-button group gap-3 px-8 py-4 font-medium rounded-lg"
+            onPointerEnter={setOutlineButtonPosition}
+            onPointerMove={setOutlineButtonPosition}
           >
-            {"Let's discuss"}
+            <span>{"Let's discuss"}</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
           <Link
