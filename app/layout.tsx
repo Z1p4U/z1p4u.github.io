@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { StarField } from "@/components/star-field";
@@ -11,6 +12,7 @@ const _geistMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-geist-mono",
 });
+const GA_MEASUREMENT_ID = "G-RC2J8C15WC";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://z1p4u.github.io"),
@@ -81,6 +83,18 @@ export default function RootLayout({
       <body
         className={`${_inter.variable} ${_geistMono.variable} font-sans antialiased`}
       >
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){window.dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_MEASUREMENT_ID}');
+          `}
+        </Script>
         <StarField />
         <Navbar />
         <main className="site-motion-shell">
