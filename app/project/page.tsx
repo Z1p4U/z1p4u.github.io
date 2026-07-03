@@ -3,16 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { ExternalLink, Github } from "lucide-react";
+import { Building2, ExternalLink, Github } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const categories = [
-  "All",
-  "Ecommerces",
-  "Mobile Apps",
-  "CMS",
-  "Company Portfolio",
-];
+const categories = ["All", "Ecommerces", "Mobile Apps", "Portfolio"];
 const PROJECTS_PER_PAGE = 8;
 
 const projectImages: Record<string, string> = {
@@ -50,178 +44,230 @@ const projectImages: Record<string, string> = {
   "Iku Team": "/assets/projects/IkuTeam.webp",
 };
 
+function getProjectSource(project: (typeof projects)[number]) {
+  if (
+    project.title === "Nawaratt" ||
+    project.title === "Nawaratt Online Shopping" ||
+    project.title === "Lori Gaming Store"
+  ) {
+    return "Freelance";
+  }
+
+  if (
+    project.title === "Hswe Lee Hint Se Portfolio" ||
+    project.title === "Nyan Lin Htet Portfolio"
+  ) {
+    return "Freelance / Personal";
+  }
+
+  if (project.title === "Iku Team") {
+    return "Event Hub";
+  }
+
+  if (project.title === "MTL Express E-commerce") {
+    return "Netscriper Co., Ltd.";
+  }
+
+  if (
+    project.category === "Portfolio" ||
+    project.category === "Internal Template"
+  ) {
+    return "Netscriper Co., Ltd.";
+  }
+
+  return null;
+}
+
 const projects = [
   {
     title: "EIKA Marine",
-    description: "Static website for marine solutions company profile.",
+    description:
+      "Static cargo and marine logistics website for company profile and service presentation.",
     tech: ["HTML", "CSS", "JavaScript", "PHP"],
-    category: "Company Portfolio",
+    category: "Portfolio",
     href: "https://www.eikamarinesolutions.com/",
   },
   {
     title: "Royal Immigrate",
     description:
-      "Static business website from beginner era (portfolio-style build).",
+      "Static visa service website for immigration support and consultation.",
     tech: ["HTML", "CSS", "JavaScript", "PHP"],
-    category: "Company Portfolio",
+    category: "Portfolio",
     href: "https://royalimmigrate.com",
   },
   {
     title: "OMUK Myanmar",
-    description: "WordPress website for business/organization profile.",
-    tech: ["WordPress", "PHP", "CMS"],
-    category: "CMS",
+    description:
+      "Restaurant CMS website built with WordPress CMS, ACF, and PHP for menu and brand content.",
+    tech: ["WordPress CMS", "PHP", "ACF"],
+    category: "Portfolio",
     href: "https://www.omukmyanmar.com/",
   },
   {
     title: "MTL Express E-commerce",
-    description: "React-based online store project for retail products.",
-    tech: ["React JS", "JavaScript", "REST API"],
+    description:
+      "Marketplace-style e-commerce website for product browsing and online shopping flows.",
+    tech: ["React", "Redux", "shadcn/ui"],
     category: "Ecommerces",
     href: "https://minthilaexpress.com",
   },
   {
     title: "Lori Gaming Store",
-    description: "React e-commerce storefront for gaming-related products.",
-    tech: ["React JS", "JavaScript", "E-commerce"],
+    description:
+      "Gaming item e-commerce storefront for top-up and digital product purchasing flows.",
+    tech: ["React", "shadcn/ui"],
     category: "Ecommerces",
     href: "http://lorigamingstore.com/",
   },
   {
     title: "Nawaratt",
-    description: "React Native mobile app delivered for Android distribution.",
-    tech: ["React Native", "Expo", "Mobile"],
+    description:
+      "Medical e-commerce mobile app for browsing and purchasing healthcare products.",
+    tech: ["React Native", "Expo", "Redux", "Laravel"],
     category: "Mobile Apps",
     href: "https://expo.dev/artifacts/eas/aJC4aDHQFL5QAorxfFHZkN.apk",
   },
   {
     title: "Nawaratt Online Shopping",
     description:
-      "React Native shopping app project (private build and distribution).",
-    tech: ["React Native", "Expo", "Mobile Commerce"],
+      "Marketplace-style mobile shopping app for product discovery, cart, and order flows.",
+    tech: ["React Native", "Expo", "Redux", "Laravel"],
     category: "Mobile Apps",
   },
   {
     title: "Myat Taw Win",
-    description: "WordPress website for healthcare/business presentation.",
-    tech: ["WordPress", "PHP", "ACF"],
-    category: "CMS",
+    description:
+      "Hospital CMS website built with WordPress CMS, ACF, and PHP for healthcare information.",
+    tech: ["WordPress CMS", "PHP", "ACF"],
+    category: "Portfolio",
     href: "https://myattawwin.hospital",
   },
   {
-    title: "Quan Zhu Fuan",
-    description: "WordPress business site delivered with CMS workflow.",
-    tech: ["WordPress", "PHP", "ACF"],
-    category: "CMS",
-    href: "https://quanzhufuan.com",
-  },
-  {
     title: "Power Nine Group",
-    description: "Corporate WordPress website with custom content sections.",
-    tech: ["WordPress", "PHP", "ACF"],
-    category: "CMS",
+    description:
+      "Group company CMS website built with WordPress CMS, ACF, and PHP for corporate content.",
+    tech: ["WordPress CMS", "PHP", "ACF"],
+    category: "Portfolio",
     href: "https://www.powerninegroup.com",
   },
   {
     title: "Golden Eugenia Myanmar",
-    description: "WordPress website for travel and tours business.",
-    tech: ["WordPress", "PHP", "CMS"],
-    category: "CMS",
+    description:
+      "Travel and tour CMS website built with WordPress CMS, ACF, and PHP for packages and enquiries.",
+    tech: ["WordPress CMS", "PHP", "ACF"],
+    category: "Portfolio",
     href: "https://gemtravelandtours.com",
   },
   {
     title: "City Hospital Mandalay",
     description:
-      "WordPress healthcare website for hospital information and branding.",
-    tech: ["WordPress", "PHP", "CMS"],
-    category: "CMS",
+      "Hospital CMS website built with WordPress CMS, ACF, and PHP for services and patient information.",
+    tech: ["WordPress CMS", "PHP", "ACF"],
+    category: "Portfolio",
     href: "https://www.cityhospitalmandalay.com/",
   },
   {
     title: "RoyalAlpha",
-    description: "WordPress corporate website with custom page structure.",
-    tech: ["WordPress", "PHP", "ACF"],
-    category: "CMS",
+    description:
+      "Group company CMS website built with WordPress CMS, ACF, and PHP for corporate presentation.",
+    tech: ["WordPress CMS", "PHP", "ACF"],
+    category: "Portfolio",
     href: "https://www.royalalpha.com.mm/",
   },
   {
     title: "Royal Shambella",
-    description: "WordPress company website for group profile and services.",
-    tech: ["WordPress", "PHP", "CMS"],
-    category: "CMS",
+    description:
+      "Group company CMS website built with WordPress CMS, ACF, and PHP for brand and company content.",
+    tech: ["WordPress CMS", "PHP", "ACF"],
+    category: "Portfolio",
     href: "https://www.rsfamilyholding.com/",
   },
   {
     title: "Asia Beauty Paradise",
-    description: "WordPress business website for beauty and wellness brand.",
-    tech: ["WordPress", "PHP", "CMS"],
-    category: "CMS",
+    description:
+      "Beauty and cosmetics CMS website built with WordPress CMS, ACF, and PHP for product branding.",
+    tech: ["WordPress CMS", "PHP", "ACF"],
+    category: "Portfolio",
     href: "https://www.asiabeautyparadise.com/",
   },
   {
     title: "Beta Alliance Engineering",
-    description: "WordPress engineering company profile website.",
-    tech: ["WordPress", "PHP", "CMS"],
-    category: "CMS",
+    description:
+      "Engineering company CMS website built with WordPress CMS, ACF, and PHP for service profiles.",
+    tech: ["WordPress CMS", "PHP", "ACF"],
+    category: "Portfolio",
     href: "https://www.betaallianceengineering.com/",
   },
   {
     title: "Peace Brothers",
-    description: "WordPress corporate/informational website project.",
-    tech: ["WordPress", "PHP", "CMS"],
-    category: "CMS",
+    description:
+      "Industrial company CMS website built with WordPress CMS, ACF, and PHP for company information.",
+    tech: ["WordPress CMS", "PHP", "ACF"],
+    category: "Portfolio",
     href: "https://www.peacebrothers.com.mm/",
   },
   {
     title: "Digital Link",
-    description: "WordPress IT company website with editable CMS content.",
-    tech: ["WordPress", "PHP", "ACF"],
-    category: "CMS",
+    description:
+      "Technology company CMS website built with WordPress CMS, ACF, and PHP for services and content.",
+    tech: ["WordPress CMS", "PHP", "ACF"],
+    category: "Portfolio",
     href: "https://www.digitallink-it.com/",
   },
   {
     title: "Zay Yar Lin Photography",
-    description: "WordPress portfolio website for photography showcase.",
-    tech: ["WordPress", "PHP", "Portfolio"],
-    category: "CMS",
+    description:
+      "Personal photography portfolio CMS website built with WordPress CMS, ACF, and PHP.",
+    tech: ["WordPress CMS", "PHP", "ACF"],
+    category: "Portfolio",
     href: "https://www.zayyarlinphotography.com/",
   },
   {
     title: "Pao Youth Organization",
-    description: "WordPress informational website for community organization.",
-    tech: ["WordPress", "PHP", "CMS"],
-    category: "CMS",
+    description:
+      "Youth organization CMS website built with WordPress CMS, ACF, and PHP for programs and updates.",
+    tech: ["WordPress CMS", "PHP", "ACF"],
+    category: "Portfolio",
     href: "https://www.pao-youth.org/",
   },
   {
     title: "India Myanmar Chamber of Commerce",
     description:
-      "WordPress organization website with structured information pages.",
-    tech: ["WordPress", "PHP", "CMS"],
-    category: "CMS",
+      "Chamber of commerce CMS website built with WordPress CMS, ACF, and PHP for member information.",
+    tech: ["WordPress CMS", "PHP", "ACF"],
+    category: "Portfolio",
     href: "https://www.imccmyanmar.org/",
   },
   {
     title: "International Buddhist Education Center",
-    description: "WordPress website for institution profile and announcements.",
-    tech: ["WordPress", "PHP", "CMS"],
-    category: "CMS",
+    description:
+      "Buddhist education center CMS website built with WordPress CMS, ACF, and PHP for institutional content.",
+    tech: ["WordPress CMS", "PHP", "ACF"],
+    category: "Portfolio",
     href: "https://ibecmyanmar.org/",
+  },
+  {
+    title: "Quan Zhu Fuan",
+    description:
+      "Group company CMS website built with WordPress CMS, ACF, and PHP for business profiles.",
+    tech: ["WordPress CMS", "PHP", "ACF"],
+    category: "Portfolio",
+    href: "https://quanzhufuan.com",
   },
   {
     title: "Hswe Lee Hint Se Portfolio",
     description:
-      "Static portfolio website built with Next.js for a personal brand and work showcase.",
-    tech: ["Next.js", "React", "Static Site"],
-    category: "Company Portfolio",
+      "UI/UX designer portfolio website built with Next.js for case studies and personal branding.",
+    tech: ["Next.js", "shadcn/ui"],
+    category: "Portfolio",
     href: "https://hsweleehintse.netlify.app/",
   },
   {
     title: "Nyan Lin Htet Portfolio",
     description:
-      "React portfolio website for a developer profile, project showcase, and personal branding.",
-    tech: ["React", "JavaScript", "Portfolio"],
-    category: "Company Portfolio",
+      "UI/UX designer portfolio website built with React for case studies and personal branding.",
+    tech: ["React", "shadcn/ui"],
+    category: "Portfolio",
     href: "https://nyan-lin-htet.netlify.app/",
   },
   {
@@ -229,78 +275,130 @@ const projects = [
     description:
       "Static company portfolio website built in early-career period.",
     tech: ["HTML", "CSS", "JavaScript", "PHP"],
-    category: "Company Portfolio",
+    category: "Portfolio",
     href: "https://www.thenorthcreators.com/",
   },
   {
     title: "Htoo Dana Kyaw",
-    description: "Static company website developed during foundational stage.",
+    description:
+      "Static construction and real estate website for company profile and project presentation.",
     tech: ["HTML", "CSS", "JavaScript", "PHP"],
-    category: "Company Portfolio",
+    category: "Portfolio",
     href: "https://www.htoodanakyaw.com/",
   },
   {
     title: "AccentorCoaching",
     description: "Static website for coaching/business presence.",
     tech: ["HTML", "CSS", "JavaScript", "PHP"],
-    category: "Company Portfolio",
+    category: "Portfolio",
     href: "https://www.accentorcoaching.uk/",
   },
   {
     title: "Fly Me Travel & Tours",
     description: "Static travel and tours website from early project phase.",
     tech: ["HTML", "CSS", "JavaScript", "PHP"],
-    category: "Company Portfolio",
+    category: "Portfolio",
     href: "https://flymetravelandtours.com",
   },
   {
     title: "Kyaw Sofa",
     description: "Static furniture/business profile website.",
     tech: ["HTML", "CSS", "JavaScript", "PHP"],
-    category: "Company Portfolio",
+    category: "Portfolio",
     href: "https://kyawsofa.com/",
   },
   {
     title: "Miyama Kuruma",
-    description: "Static business website project from early career stage.",
+    description:
+      "Static car business website for vehicle information and company presentation.",
     tech: ["HTML", "CSS", "JavaScript", "PHP"],
-    category: "Company Portfolio",
+    category: "Portfolio",
     href: "https://miyamakuruma.com/",
   },
   {
     title: "Pan Khone Taw Restaurant",
     description:
       "Static restaurant website for brand presentation, menu browsing, and customer contact.",
-    tech: ["HTML", "CSS", "JavaScript", "Static Site"],
-    category: "Company Portfolio",
+    tech: ["HTML", "CSS", "JavaScript"],
+    category: "Portfolio",
     href: "https://www.pan-khone-taw.com/",
   },
   {
     title: "Z Land Development",
     description:
       "Static company website for real estate and land development business presentation.",
-    tech: ["HTML", "CSS", "JavaScript", "Static Site"],
-    category: "Company Portfolio",
+    tech: ["HTML", "CSS", "JavaScript"],
+    category: "Portfolio",
     href: "https://www.zlanddevelopment.com/",
   },
   {
     title: "Iku Team",
     description:
       "Company portfolio website built with HubSpot CMS for services, resources, and brand presentation.",
-    tech: ["HubSpot CMS", "HubL", "Company Website"],
-    category: "Company Portfolio",
+    tech: ["HubSpot CMS", "HubL"],
+    category: "Portfolio",
     href: "https://ikuteam.com/",
   },
   {
     title: "Internal Revenue Department (UI Template)",
     description:
-      "UI template contribution project for payment hub interface (listed at end by request).",
-    tech: ["UI Template", "Frontend"],
+      "UI template contribution for the Internal Revenue Department payment hub interface.",
+    tech: ["HTML", "CSS"],
     category: "Internal Template",
     href: "https://uat-paymenthub.ird.gov.mm",
     lowVisibility: true,
   },
 ];
+
+const featuredProjectOrder = [
+  "Iku Team",
+  "Golden Eugenia Myanmar",
+  "Myat Taw Win",
+  "City Hospital Mandalay",
+  "Power Nine Group",
+  "Zay Yar Lin Photography",
+  "India Myanmar Chamber of Commerce",
+  "Asia Beauty Paradise",
+];
+
+const pinnedLastProjectOrder = [
+  "OMUK Myanmar",
+  "Royal Immigrate",
+  "EIKA Marine",
+  "Internal Revenue Department (UI Template)",
+];
+
+function getProjectSortRank(project: (typeof projects)[number]) {
+  const pinnedLastIndex = pinnedLastProjectOrder.indexOf(project.title);
+
+  if (pinnedLastIndex >= 0) {
+    return 100 + pinnedLastIndex;
+  }
+
+  const featuredIndex = featuredProjectOrder.indexOf(project.title);
+
+  if (featuredIndex >= 0) {
+    return featuredIndex;
+  }
+
+  if (project.tech.includes("WordPress CMS")) {
+    return 20;
+  }
+
+  if (
+    project.tech.some((tech) =>
+      ["React", "Next.js", "React Native", "Redux"].includes(tech),
+    )
+  ) {
+    return 40;
+  }
+
+  if (project.tech.includes("HTML")) {
+    return 60;
+  }
+
+  return 80;
+}
 
 function ProjectPreview({ image, title }: { image?: string; title: string }) {
   return (
@@ -348,11 +446,9 @@ export default function ProjectsPage() {
   const [currentPage, setCurrentPage] = useState(1);
 
   const orderedProjects = useMemo(() => {
-    const reversed = [...projects].reverse();
-    return [
-      ...reversed.filter((project) => !project.lowVisibility),
-      ...reversed.filter((project) => project.lowVisibility),
-    ];
+    return [...projects].sort(
+      (a, b) => getProjectSortRank(a) - getProjectSortRank(b),
+    );
   }, []);
 
   const filtered =
@@ -422,21 +518,31 @@ export default function ProjectsPage() {
             <div
               key={project.title}
               className={cn(
-                "group/card relative overflow-hidden rounded-2xl border border-border/50 bg-secondary/30 p-5 transition-all duration-500 hover:-translate-y-1 hover:border-primary/30 hover:bg-secondary/40 hover:shadow-[0_24px_70px_rgba(0,0,0,0.28)]",
+                "group/card relative h-full overflow-hidden rounded-2xl border border-border/50 bg-secondary/30 p-5 transition-all duration-500 hover:border-primary/30 hover:bg-secondary/40 hover:shadow-[0_24px_70px_rgba(0,0,0,0.28)]",
                 project.lowVisibility && "opacity-80",
               )}
             >
               <span className="pointer-events-none absolute inset-0 opacity-0 blur-2xl transition-opacity duration-700 group-hover/card:opacity-100 bg-[radial-gradient(circle_at_50%_0%,rgba(124,58,237,0.28),transparent_42%)]" />
-              <div className="relative z-10">
+              <div className="relative z-10 flex h-full flex-col">
                 <ProjectPreview
                   image={projectImages[project.title]}
                   title={project.title}
                 />
-                <div className="flex items-start justify-between mb-4">
-                  <span className="text-xs font-mono text-primary px-3 py-1 rounded-full bg-primary/10">
-                    {project.category}
-                  </span>
-                  <div className="flex items-center gap-2">
+                <div className="flex items-start justify-between mb-4 gap-4">
+                  <div className="flex min-w-0 flex-wrap items-center gap-2">
+                    <span className="text-xs font-mono text-primary px-3 py-1 rounded-full bg-primary/10">
+                      {project.category}
+                    </span>
+                    {getProjectSource(project) ? (
+                      <span className="inline-flex min-w-0 items-center gap-1.5 rounded-full border border-border/40 bg-background/45 px-3 py-1 text-xs font-medium text-muted-foreground transition-colors group-hover/card:border-primary/25 group-hover/card:text-foreground">
+                        <Building2 className="h-3.5 w-3.5 shrink-0 text-primary/80" />
+                        <span className="truncate">
+                          {getProjectSource(project)}
+                        </span>
+                      </span>
+                    ) : null}
+                  </div>
+                  <div className="flex shrink-0 items-center gap-2">
                     <a
                       href="https://github.com/Z1p4U"
                       target="_blank"
@@ -463,11 +569,11 @@ export default function ProjectsPage() {
                 <h3 className="text-lg font-bold text-foreground group-hover/card:text-primary transition-colors mb-2">
                   {project.title}
                 </h3>
-                <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                <p className="text-sm text-muted-foreground leading-relaxed mb-5">
                   {project.description}
                 </p>
 
-                <div className="flex flex-wrap gap-2">
+                <div className="mt-auto flex flex-wrap gap-2 pt-1">
                   {project.tech.map((tech) => (
                     <span
                       key={tech}

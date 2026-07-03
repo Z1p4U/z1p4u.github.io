@@ -16,10 +16,27 @@ import {
 const featuredProjects = [
   {
     number: "01",
+    title: "Iku Team",
+    description:
+      "Company portfolio website built with HubSpot CMS for services, resources, and brand presentation.",
+    tech: ["HubSpot CMS", "HubL"],
+    category: "Portfolio",
+    year: "2025",
+    href: "https://ikuteam.com/",
+    preview: {
+      eyebrow: "HubSpot",
+      accent: "#f97316",
+      image: "/assets/projects/IkuTeam.webp",
+      gradient:
+        "radial-gradient(circle at 24% 18%, rgba(249, 115, 22, 0.72), transparent 34%), linear-gradient(135deg, #1f1308 0%, #3b1d0f 48%, #020617 100%)",
+    },
+  },
+  {
+    number: "02",
     title: "MTL Express E-commerce",
     description:
-      "React e-commerce build with product browsing, ordering flow, and practical storefront UX.",
-    tech: ["React JS", "JavaScript", "REST API"],
+      "Marketplace-style e-commerce website for product browsing and online shopping flows.",
+    tech: ["React", "Redux", "shadcn/ui"],
     category: "Ecommerces",
     year: "2025",
     href: "https://minthilaexpress.com",
@@ -32,12 +49,12 @@ const featuredProjects = [
     },
   },
   {
-    number: "02",
+    number: "03",
     title: "Zay Yar Lin Photography",
     description:
-      "WordPress portfolio website for photography showcase with editable CMS content.",
-    tech: ["WordPress", "PHP", "Portfolio"],
-    category: "CMS",
+      "Personal photography portfolio CMS website built with WordPress CMS, ACF, and PHP.",
+    tech: ["WordPress CMS", "PHP", "ACF"],
+    category: "Portfolio",
     year: "2025",
     href: "https://www.zayyarlinphotography.com/",
     preview: {
@@ -49,11 +66,11 @@ const featuredProjects = [
     },
   },
   {
-    number: "03",
+    number: "04",
     title: "Nawaratt",
     description:
-      "React Native app build distributed for Android with production-ready mobile workflow.",
-    tech: ["React Native", "Expo", "Mobile"],
+      "Medical e-commerce mobile app for browsing and purchasing healthcare products.",
+    tech: ["React Native", "Expo", "Redux", "Laravel"],
     category: "Mobile Apps",
     year: "2024",
     href: "https://expo.dev/artifacts/eas/aJC4aDHQFL5QAorxfFHZkN.apk",
@@ -63,23 +80,6 @@ const featuredProjects = [
       image: "/assets/projects/NawarattMedical.webp",
       gradient:
         "radial-gradient(circle at 28% 18%, rgba(56, 189, 248, 0.72), transparent 34%), linear-gradient(135deg, #082f49 0%, #0f172a 48%, #020617 100%)",
-    },
-  },
-  {
-    number: "04",
-    title: "Miyama Kuruma",
-    description:
-      "Static company portfolio website built in early-career period with HTML, CSS, JavaScript, and PHP.",
-    tech: ["HTML", "CSS", "JavaScript", "PHP"],
-    category: "Company Portfolio",
-    year: "2024",
-    href: "https://miyamakuruma.com/",
-    preview: {
-      eyebrow: "Website",
-      accent: "#fb7185",
-      image: "/assets/projects/MiyamaKuruma.webp",
-      gradient:
-        "radial-gradient(circle at 74% 22%, rgba(251, 113, 133, 0.75), transparent 34%), linear-gradient(135deg, #1f1020 0%, #312e81 48%, #020617 100%)",
     },
   },
 ];
@@ -94,23 +94,6 @@ function getFloatingPreviewSize(project: (typeof featuredProjects)[number]) {
     : { width: 430, height: 410 };
 }
 
-function useInView(ref: React.RefObject<HTMLElement | null>) {
-  const [isInView, setIsInView] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setIsInView(true);
-      },
-      { threshold: 0.1 },
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [ref]);
-  return isInView;
-}
-
 export function FeaturedProjectsSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
@@ -122,7 +105,6 @@ export function FeaturedProjectsSection() {
   const cursorYTo = useRef<((value: number) => void) | null>(null);
   const innerXTo = useRef<((value: number) => void) | null>(null);
   const innerYTo = useRef<((value: number) => void) | null>(null);
-  const inView = useInView(sectionRef);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
   const [loadedPreviewImages, setLoadedPreviewImages] = useState<
@@ -422,13 +404,10 @@ export function FeaturedProjectsSection() {
                 onMouseEnter={(event) => showFloatingLayers(i, event)}
                 onMouseMove={moveFloatingLayers}
                 className={`group/project relative -mx-6 overflow-hidden border-t border-border/30 px-6 py-7 transition-all duration-700 last:border-b md:py-9 ${
-                  inView
-                    ? `${isDimmed ? "opacity-45" : "opacity-100"} translate-y-0`
-                    : "opacity-0 translate-y-6"
+                  isDimmed ? "opacity-45" : "opacity-100"
                 }`}
                 style={
                   {
-                    transitionDelay: inView && !isHovering ? `${i * 90}ms` : "0ms",
                     "--project-accent": project.preview.accent,
                   } as CSSProperties
                 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 
 const techStack = [
   "React",
@@ -89,33 +89,13 @@ function TechMarquee() {
   );
 }
 
-function useInView(ref: React.RefObject<HTMLElement | null>) {
-  const [isInView, setIsInView] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setIsInView(true);
-      },
-      { threshold: 0.15 },
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [ref]);
-  return isInView;
-}
-
 export function SkillMarqueeSection() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const inView = useInView(sectionRef);
-
   return (
     <section id="skills" className="relative z-10 py-24 px-6 lg:px-16">
       {/* Tech marquee ticker */}
       <TechMarquee />
 
-      <div ref={sectionRef} className="max-w-7xl mx-auto mt-20">
+      <div className="max-w-7xl mx-auto mt-20">
         <div className="flex items-center gap-4 mb-4">
           <div className="h-px w-12 bg-primary" />
           <span className="text-xs font-mono tracking-[0.3em] text-primary uppercase">
@@ -127,11 +107,10 @@ export function SkillMarqueeSection() {
         </h2>
 
         <div className="grid md:grid-cols-2 gap-px bg-border/30">
-          {specializations.map((spec, i) => (
+          {specializations.map((spec) => (
             <div
               key={spec.number}
-              className={`bg-background p-8 md:p-10 group hover:bg-secondary/30 transition-all duration-500 ${inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
-              style={{ transitionDelay: `${i * 100}ms` }}
+              className="bg-background p-8 md:p-10 group hover:bg-secondary/30 transition-all duration-500"
             >
               <span className="text-xs font-mono text-primary">
                 {spec.number}

@@ -1,6 +1,3 @@
-"use client";
-
-import { useRef, useEffect, useState } from "react";
 import {
   Code2,
   Smartphone,
@@ -55,30 +52,10 @@ const skills = [
   },
 ];
 
-function useInView(ref: React.RefObject<HTMLElement | null>) {
-  const [isInView, setIsInView] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setIsInView(true);
-      },
-      { threshold: 0.1 },
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [ref]);
-  return isInView;
-}
-
 export function SkillsSection() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const inView = useInView(sectionRef);
-
   return (
     <section id="skills" className="relative z-10 py-24 px-6 lg:px-16">
-      <div ref={sectionRef} className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <div className="flex items-center gap-4 mb-4">
           <div className="h-px w-12 bg-primary" />
           <span className="text-xs font-mono tracking-[0.3em] text-primary uppercase">
@@ -90,13 +67,10 @@ export function SkillsSection() {
         </h2>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {skills.map((skill, i) => (
+          {skills.map((skill) => (
             <div
               key={skill.title}
-              className={`group relative rounded-2xl border border-border/40 bg-secondary/20 p-7 transition-all duration-300 hover:border-primary/20 hover:bg-secondary/25 ${
-                inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-              }`}
-              style={{ transitionDelay: `${i * 80}ms` }}
+              className="group relative rounded-2xl border border-border/40 bg-secondary/20 p-7 transition-all duration-300 hover:border-primary/20 hover:bg-secondary/25"
             >
               <div className="flex items-center justify-center w-11 h-11 rounded-xl bg-primary/10 text-primary mb-5 group-hover:bg-primary/15 transition-colors">
                 <skill.icon className="w-5 h-5" />

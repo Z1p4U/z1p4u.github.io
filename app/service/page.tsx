@@ -152,15 +152,18 @@ export default function ServicesPage() {
         </div>
 
         <div className="grid md:grid-cols-3 gap-4 mb-12">
-          <div className="p-4 rounded-xl border border-border/50 bg-secondary/30">
+          <div className="group relative overflow-hidden p-4 rounded-xl border border-border/50 bg-secondary/30 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:bg-secondary/45 hover:shadow-[0_18px_45px_rgba(124,58,237,0.12)]">
+            <span className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/70 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
             <p className="text-lg font-semibold text-primary">3+ Years</p>
             <p className="text-sm text-muted-foreground">Full-stack development experience</p>
           </div>
-          <div className="p-4 rounded-xl border border-border/50 bg-secondary/30">
+          <div className="group relative overflow-hidden p-4 rounded-xl border border-border/50 bg-secondary/30 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:bg-secondary/45 hover:shadow-[0_18px_45px_rgba(124,58,237,0.12)]">
+            <span className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/70 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
             <p className="text-lg font-semibold text-primary">React + Laravel</p>
             <p className="text-sm text-muted-foreground">Production apps and REST APIs</p>
           </div>
-          <div className="p-4 rounded-xl border border-border/50 bg-secondary/30">
+          <div className="group relative overflow-hidden p-4 rounded-xl border border-border/50 bg-secondary/30 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:bg-secondary/45 hover:shadow-[0_18px_45px_rgba(124,58,237,0.12)]">
+            <span className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/70 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
             <p className="text-lg font-semibold text-primary">WordPress + ACF</p>
             <p className="text-sm text-muted-foreground">CMS delivery and deployment support</p>
           </div>

@@ -490,7 +490,8 @@ body:has(.route-transition-veil) {
 .site-motion-shell .rounded-3xl,
 .site-motion-shell [data-slot="card"] {
   transition-duration: 220ms;
-  transition-property: border-color, box-shadow, transform, background-color;
+  transition-property:
+    border-color, box-shadow, transform, background-color, opacity, filter;
   transition-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 

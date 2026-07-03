@@ -105,9 +105,39 @@ export default function ContactPage() {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-5 gap-6">
+        <div className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {contactInfo.map((info) => (
+            <div
+              key={info.label}
+              className="group rounded-2xl border border-border/50 bg-secondary/30 p-5 transition-all duration-300 hover:border-primary/30"
+            >
+              <div className="mb-3 flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary transition-colors group-hover:bg-primary/20">
+                  <info.icon className="h-4 w-4" />
+                </div>
+                <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground">
+                  {info.label}
+                </span>
+              </div>
+              {info.href ? (
+                <a
+                  href={info.href}
+                  className="break-words text-sm font-medium text-foreground transition-colors hover:text-primary"
+                >
+                  {info.value}
+                </a>
+              ) : (
+                <p className="break-words text-sm font-medium text-foreground">
+                  {info.value}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div className="grid items-start gap-6 lg:grid-cols-5">
           {/* Contact Form */}
-          <div className="lg:col-span-3 p-8 rounded-2xl border border-border/50 bg-secondary/30">
+          <div className="self-start rounded-2xl border border-border/50 bg-secondary/30 p-6 sm:p-8 lg:col-span-3">
             {submitted ? (
               <Card className="border-primary/30 bg-primary/5 shadow-none">
                 <CardHeader className="items-center text-center">
@@ -278,32 +308,6 @@ export default function ContactPage() {
                 available for freelance and part-time project work.
               </p>
             </div>
-
-            {contactInfo.map((info) => (
-              <div
-                key={info.label}
-                className="group p-6 rounded-2xl border border-border/50 bg-secondary/30 hover:border-primary/30 transition-all duration-300"
-              >
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary group-hover:bg-primary/20 transition-colors">
-                    <info.icon className="w-4 h-4" />
-                  </div>
-                  <span className="text-xs font-mono text-muted-foreground uppercase tracking-wider">
-                    {info.label}
-                  </span>
-                </div>
-                {info.href ? (
-                  <a
-                    href={info.href}
-                    className="text-foreground hover:text-primary transition-colors font-medium"
-                  >
-                    {info.value}
-                  </a>
-                ) : (
-                  <p className="text-foreground font-medium">{info.value}</p>
-                )}
-              </div>
-            ))}
 
             {/* Social */}
             <div className="p-6 rounded-2xl border border-border/50 bg-secondary/30">

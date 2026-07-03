@@ -23,15 +23,15 @@ const timeline = [
     icon: Smartphone,
   },
   {
-    year: "Netscriper Co., Ltd.",
-    title: "Full-Stack Web Developer",
+    year: "2023 - 2025",
+    title: "Full-Stack Web Developer · Netscriper Co., Ltd.",
     description:
       "Built React + Laravel applications, REST APIs, WordPress CMS solutions with ACF, and handled deployment on cPanel and DigitalOcean VPS.",
     icon: Briefcase,
   },
   {
-    year: "Yolo Digital Myanmar",
-    title: "Full-Stack Web Developer",
+    year: "2022 - 2023",
+    title: "Full-Stack Web Developer · Yolo Digital Myanmar",
     description:
       "Developed production web features and CMS-driven websites while collaborating in team delivery cycles.",
     icon: Code2,
