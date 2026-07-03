@@ -26,7 +26,7 @@ const featuredProjects = [
     preview: {
       eyebrow: "Storefront",
       accent: "#4ade80",
-      image: "/assets/projects/MTLExpressE-commerce.png",
+      image: "/assets/projects/MTLExpressE-commerce.webp",
       gradient:
         "radial-gradient(circle at 22% 18%, rgba(74, 222, 128, 0.7), transparent 34%), linear-gradient(135deg, #0f172a 0%, #1f2937 48%, #020617 100%)",
     },
@@ -43,7 +43,7 @@ const featuredProjects = [
     preview: {
       eyebrow: "Portfolio",
       accent: "#f59e0b",
-      image: "/assets/projects/ZayYarLinPhotography.png",
+      image: "/assets/projects/ZayYarLinPhotography.webp",
       gradient:
         "radial-gradient(circle at 75% 18%, rgba(245, 158, 11, 0.75), transparent 32%), linear-gradient(135deg, #211711 0%, #3f2d20 45%, #0c0a09 100%)",
     },
@@ -60,7 +60,7 @@ const featuredProjects = [
     preview: {
       eyebrow: "Application",
       accent: "#38bdf8",
-      image: "/assets/projects/NawarattMedical.png",
+      image: "/assets/projects/NawarattMedical.webp",
       gradient:
         "radial-gradient(circle at 28% 18%, rgba(56, 189, 248, 0.72), transparent 34%), linear-gradient(135deg, #082f49 0%, #0f172a 48%, #020617 100%)",
     },
@@ -77,7 +77,7 @@ const featuredProjects = [
     preview: {
       eyebrow: "Website",
       accent: "#fb7185",
-      image: "/assets/projects/MiyamaKuruma.png",
+      image: "/assets/projects/MiyamaKuruma.webp",
       gradient:
         "radial-gradient(circle at 74% 22%, rgba(251, 113, 133, 0.75), transparent 34%), linear-gradient(135deg, #1f1020 0%, #312e81 48%, #020617 100%)",
     },
