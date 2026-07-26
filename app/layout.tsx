@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import Script from "next/script";
+import { Suspense } from "react";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { StarField } from "@/components/star-field";
 import { PageTransition } from "@/components/page-transition";
+import { GoogleAnalyticsPageView } from "@/components/google-analytics-page-view";
 import "./globals.css";
 
 const _inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -92,9 +94,12 @@ export default function RootLayout({
             window.dataLayer = window.dataLayer || [];
             function gtag(){window.dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', '${GA_MEASUREMENT_ID}');
+            gtag('config', '${GA_MEASUREMENT_ID}', { send_page_view: false });
           `}
         </Script>
+        <Suspense fallback={null}>
+          <GoogleAnalyticsPageView measurementId={GA_MEASUREMENT_ID} />
+        </Suspense>
         <StarField />
         <Navbar />
         <main className="site-motion-shell">

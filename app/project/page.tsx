@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { Building2, ExternalLink, Github } from "lucide-react";
+import { Building2, ExternalLink, Github, Smartphone } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const categories = ["All", "Ecommerces", "Mobile Apps", "Portfolio"];
@@ -125,7 +125,6 @@ const projects = [
       "Medical e-commerce mobile app for browsing and purchasing healthcare products.",
     tech: ["React Native", "Expo", "Redux", "Laravel"],
     category: "Mobile Apps",
-    href: "https://expo.dev/artifacts/eas/aJC4aDHQFL5QAorxfFHZkN.apk",
   },
   {
     title: "Nawaratt Online Shopping",
@@ -133,6 +132,8 @@ const projects = [
       "Marketplace-style mobile shopping app for product discovery, cart, and order flows.",
     tech: ["React Native", "Expo", "Redux", "Laravel"],
     category: "Mobile Apps",
+    href: "https://play.google.com/store/apps/details?id=com.nawaratt.NawarattOnlineShoppingApp",
+    linkKind: "android",
   },
   {
     title: "Myat Taw Win",
@@ -557,10 +558,18 @@ export default function ProjectsPage() {
                         href={project.href}
                         target="_blank"
                         rel="noreferrer"
-                        aria-label={`Visit ${project.title}`}
+                        aria-label={
+                          project.linkKind === "android"
+                            ? `Open ${project.title} on Play Store`
+                            : `Visit ${project.title}`
+                        }
                         className="p-2 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all"
                       >
-                        <ExternalLink className="w-4 h-4" />
+                        {project.linkKind === "android" ? (
+                          <Smartphone className="w-4 h-4" />
+                        ) : (
+                          <ExternalLink className="w-4 h-4" />
+                        )}
                       </a>
                     ) : null}
                   </div>
