@@ -67,17 +67,17 @@ const featuredProjects = [
   },
   {
     number: "04",
-    title: "Nawaratt",
+    title: "Nawaratt Online Shopping",
     description:
-      "Medical e-commerce mobile app for browsing and purchasing healthcare products.",
+      "Marketplace-style mobile shopping app launched on Google Play for product discovery, cart, and order flows.",
     tech: ["React Native", "Expo", "Redux", "Laravel"],
     category: "Mobile Apps",
-    year: "2024",
-    href: "https://expo.dev/artifacts/eas/aJC4aDHQFL5QAorxfFHZkN.apk",
+    year: "2026",
+    href: "https://play.google.com/store/apps/details?id=com.nawaratt.NawarattOnlineShoppingApp",
     preview: {
       eyebrow: "Application",
       accent: "#38bdf8",
-      image: "/assets/projects/NawarattMedical.webp",
+      image: "/assets/projects/NawarattOnlineShopping.webp",
       gradient:
         "radial-gradient(circle at 28% 18%, rgba(56, 189, 248, 0.72), transparent 34%), linear-gradient(135deg, #082f49 0%, #0f172a 48%, #020617 100%)",
     },

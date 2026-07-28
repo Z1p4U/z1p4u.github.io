@@ -3,7 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { Building2, ExternalLink, Github, Smartphone } from "lucide-react";
+import { Building2, ExternalLink, Github } from "lucide-react";
+import { FaGooglePlay } from "react-icons/fa6";
 import { cn } from "@/lib/utils";
 
 const categories = ["All", "Ecommerces", "Mobile Apps", "Portfolio"];
@@ -115,7 +116,7 @@ const projects = [
     title: "Lori Gaming Store",
     description:
       "Gaming item e-commerce storefront for top-up and digital product purchasing flows.",
-    tech: ["React", "shadcn/ui"],
+    tech: ["React", "Redux", "shadcn/ui"],
     category: "Ecommerces",
     href: "http://lorigamingstore.com/",
   },
@@ -363,6 +364,8 @@ const featuredProjectOrder = [
 ];
 
 const pinnedLastProjectOrder = [
+  "Royal Shambella",
+  "Quan Zhu Fuan",
   "OMUK Myanmar",
   "Royal Immigrate",
   "EIKA Marine",
@@ -566,7 +569,7 @@ export default function ProjectsPage() {
                         className="p-2 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all"
                       >
                         {project.linkKind === "android" ? (
-                          <Smartphone className="w-4 h-4" />
+                          <FaGooglePlay className="w-4 h-4" />
                         ) : (
                           <ExternalLink className="w-4 h-4" />
                         )}
