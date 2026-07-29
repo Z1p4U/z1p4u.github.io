@@ -474,11 +474,6 @@ body:has(.route-transition-veil) {
   transition-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.site-motion-shell a:hover,
-.site-motion-shell button:hover {
-  transform: translateY(-1px);
-}
-
 .site-motion-shell input:focus-visible,
 .site-motion-shell textarea:focus-visible,
 .site-motion-shell button:focus-visible,
@@ -497,7 +492,6 @@ body:has(.route-transition-veil) {
 
 .site-motion-shell .rounded-2xl:hover,
 .site-motion-shell [data-slot="card"]:hover {
-  transform: translateY(-1px);
   box-shadow: 0 10px 26px rgba(124, 58, 237, 0.08);
 }
 
@@ -525,12 +519,6 @@ body:has(.route-transition-veil) {
     display: none !important;
   }
 
-  .site-motion-shell a:hover,
-  .site-motion-shell button:hover,
-  .site-motion-shell .rounded-2xl:hover,
-  .site-motion-shell [data-slot="card"]:hover {
-    transform: none;
-  }
 }
 
 /* Starfield animation */
