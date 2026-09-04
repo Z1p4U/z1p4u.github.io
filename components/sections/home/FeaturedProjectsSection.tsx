@@ -9,92 +9,66 @@ import {
   type MouseEvent,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
+import { fallbackProjects } from "@/lib/portfolio-data";
+import type { PortfolioProject } from "@/constants/types";
+import { usePortfolioOverview } from "@/hooks/use-public-portfolio";
 
-const featuredProjects = [
+const previewThemes = [
   {
-    number: "01",
-    title: "Iku Team",
-    description:
-      "Company portfolio website built with HubSpot CMS for services, resources, and brand presentation.",
-    tech: ["HubSpot CMS", "HubL"],
-    category: "Portfolio",
-    year: "2025",
-    href: "https://ikuteam.com/",
-    preview: {
-      eyebrow: "HubSpot",
-      accent: "#f97316",
-      image: "/assets/projects/IkuTeam.webp",
-      gradient:
-        "radial-gradient(circle at 24% 18%, rgba(249, 115, 22, 0.72), transparent 34%), linear-gradient(135deg, #1f1308 0%, #3b1d0f 48%, #020617 100%)",
-    },
+    accent: "#f97316",
+    gradient:
+      "radial-gradient(circle at 24% 18%, rgba(249, 115, 22, 0.72), transparent 34%), linear-gradient(135deg, #1f1308 0%, #3b1d0f 48%, #020617 100%)",
   },
   {
-    number: "02",
-    title: "MTL Express E-commerce",
-    description:
-      "Marketplace-style e-commerce website for product browsing and online shopping flows.",
-    tech: ["React", "Redux", "shadcn/ui"],
-    category: "Ecommerces",
-    year: "2025",
-    href: "https://minthilaexpress.com",
-    preview: {
-      eyebrow: "Storefront",
-      accent: "#4ade80",
-      image: "/assets/projects/MTLExpressE-commerce.webp",
-      gradient:
-        "radial-gradient(circle at 22% 18%, rgba(74, 222, 128, 0.7), transparent 34%), linear-gradient(135deg, #0f172a 0%, #1f2937 48%, #020617 100%)",
-    },
+    accent: "#4ade80",
+    gradient:
+      "radial-gradient(circle at 22% 18%, rgba(74, 222, 128, 0.7), transparent 34%), linear-gradient(135deg, #0f172a 0%, #1f2937 48%, #020617 100%)",
   },
   {
-    number: "03",
-    title: "Zay Yar Lin Photography",
-    description:
-      "Personal photography portfolio CMS website built with WordPress CMS, ACF, and PHP.",
-    tech: ["WordPress CMS", "PHP", "ACF"],
-    category: "Portfolio",
-    year: "2025",
-    href: "https://www.zayyarlinphotography.com/",
-    preview: {
-      eyebrow: "Portfolio",
-      accent: "#f59e0b",
-      image: "/assets/projects/ZayYarLinPhotography.webp",
-      gradient:
-        "radial-gradient(circle at 75% 18%, rgba(245, 158, 11, 0.75), transparent 32%), linear-gradient(135deg, #211711 0%, #3f2d20 45%, #0c0a09 100%)",
-    },
+    accent: "#f59e0b",
+    gradient:
+      "radial-gradient(circle at 75% 18%, rgba(245, 158, 11, 0.75), transparent 32%), linear-gradient(135deg, #211711 0%, #3f2d20 45%, #0c0a09 100%)",
   },
   {
-    number: "04",
-    title: "Nawaratt Online Shopping",
-    description:
-      "Marketplace-style mobile shopping app launched on Google Play for product discovery, cart, and order flows.",
-    tech: ["React Native", "Expo", "Redux", "Laravel"],
-    category: "Mobile Apps",
-    year: "2026",
-    href: "https://play.google.com/store/apps/details?id=com.nawaratt.NawarattOnlineShoppingApp",
-    preview: {
-      eyebrow: "Application",
-      accent: "#38bdf8",
-      image: "/assets/projects/NawarattOnlineShopping.webp",
-      gradient:
-        "radial-gradient(circle at 28% 18%, rgba(56, 189, 248, 0.72), transparent 34%), linear-gradient(135deg, #082f49 0%, #0f172a 48%, #020617 100%)",
-    },
+    accent: "#38bdf8",
+    gradient:
+      "radial-gradient(circle at 28% 18%, rgba(56, 189, 248, 0.72), transparent 34%), linear-gradient(135deg, #082f49 0%, #0f172a 48%, #020617 100%)",
   },
 ];
 
-function isMobileProject(project: (typeof featuredProjects)[number]) {
+function getProjectPreview(project: PortfolioProject, index: number) {
+  const theme = previewThemes[index % previewThemes.length];
+
+  return {
+    ...theme,
+    eyebrow: project.category,
+    image: project.image_url,
+  };
+}
+
+function isMobileProject(project: PortfolioProject) {
   return project.category === "Mobile Apps";
 }
 
-function getFloatingPreviewSize(project: (typeof featuredProjects)[number]) {
+function getFloatingPreviewSize(project: PortfolioProject) {
   return isMobileProject(project)
     ? { width: 320, height: 660 }
     : { width: 430, height: 410 };
 }
 
 export function FeaturedProjectsSection() {
+  const { featured_projects } = usePortfolioOverview();
+  const featuredProjects = useMemo(
+    () =>
+      featured_projects.length > 0
+        ? featured_projects
+        : fallbackProjects.filter((project) => project.is_featured),
+    [featured_projects],
+  );
   const sectionRef = useRef<HTMLDivElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
   const previewInnerRef = useRef<HTMLDivElement>(null);
@@ -110,10 +84,11 @@ export function FeaturedProjectsSection() {
   const [loadedPreviewImages, setLoadedPreviewImages] = useState<
     Record<string, boolean>
   >({});
-  const activeProject = featuredProjects[activeIndex];
+  const activeProject = featuredProjects[activeIndex] ?? featuredProjects[0];
+  const activePreview = getProjectPreview(activeProject, activeIndex);
   const activePreviewSize = getFloatingPreviewSize(activeProject);
   const activeIsMobile = isMobileProject(activeProject);
-  const activePreviewImage = activeProject.preview.image;
+  const activePreviewImage = activePreview.image;
   const isActivePreviewImageLoaded =
     !activePreviewImage || loadedPreviewImages[activePreviewImage];
 
@@ -127,7 +102,7 @@ export function FeaturedProjectsSection() {
     let isMounted = true;
 
     featuredProjects.forEach((project) => {
-      const src = project.preview.image;
+      const src = project.image_url;
       if (!src) return;
 
       const image = new window.Image();
@@ -142,7 +117,7 @@ export function FeaturedProjectsSection() {
     return () => {
       isMounted = false;
     };
-  }, [markPreviewImageLoaded]);
+  }, [featuredProjects, markPreviewImageLoaded]);
 
   useEffect(() => {
     const preview = previewRef.current;
@@ -304,7 +279,7 @@ export function FeaturedProjectsSection() {
         >
           <div
             className="absolute inset-0 opacity-90 transition-[background] duration-500"
-            style={{ background: activeProject.preview.gradient }}
+            style={{ background: activePreview.gradient }}
           />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.18),transparent_42%)] opacity-50" />
           <div
@@ -312,7 +287,7 @@ export function FeaturedProjectsSection() {
             className="absolute inset-6 overflow-hidden rounded-2xl border border-white/15 bg-background/55 backdrop-blur-sm"
           >
             <div className="absolute inset-x-5 top-5 flex items-center justify-between text-[10px] font-mono uppercase tracking-[0.22em] text-white/70">
-              <span>{activeProject.preview.eyebrow}</span>
+              <span>{activePreview.eyebrow}</span>
               <span>{activeProject.year}</span>
             </div>
             <div
@@ -352,7 +327,7 @@ export function FeaturedProjectsSection() {
                 <>
                   <div
                     className="absolute inset-0 opacity-85"
-                    style={{ background: activeProject.preview.gradient }}
+                    style={{ background: activePreview.gradient }}
                   />
                   <div className="absolute inset-5 grid grid-cols-4 gap-2">
                     <span className="rounded bg-white/70" />
@@ -370,7 +345,7 @@ export function FeaturedProjectsSection() {
                 {activeProject.title}
               </p>
               <div className="mt-4 flex gap-2">
-                {activeProject.tech.slice(0, 3).map((tech) => (
+                {activeProject.tech_stack.slice(0, 3).map((tech) => (
                   <span
                     key={tech}
                     className="rounded-full border border-white/15 bg-white/10 px-2.5 py-1 text-[10px] font-mono text-white/75"
@@ -394,13 +369,12 @@ export function FeaturedProjectsSection() {
         <div className="relative flex flex-col">
           {featuredProjects.map((project, i) => {
             const isDimmed = isHovering && activeIndex !== i;
+            const preview = getProjectPreview(project, i);
 
             return (
-              <a
-                key={project.number}
-                href={project.href}
-                target="_blank"
-                rel="noreferrer"
+              <Link
+                key={project.slug}
+                href={`/project/detail?slug=${project.slug}`}
                 onMouseEnter={(event) => showFloatingLayers(i, event)}
                 onMouseMove={moveFloatingLayers}
                 className={`group/project relative -mx-6 overflow-hidden border-t border-border/30 px-6 py-7 transition-all duration-700 last:border-b md:py-9 ${
@@ -408,7 +382,7 @@ export function FeaturedProjectsSection() {
                 }`}
                 style={
                   {
-                    "--project-accent": project.preview.accent,
+                    "--project-accent": preview.accent,
                   } as CSSProperties
                 }
               >
@@ -416,13 +390,15 @@ export function FeaturedProjectsSection() {
                 <span
                   className="absolute inset-y-0 left-1/2 w-screen -translate-x-1/2 opacity-0 blur-2xl transition-opacity duration-700 group-hover/project:opacity-100"
                   style={{
-                    background: `radial-gradient(circle at 50% 50%, ${project.preview.accent}33, transparent 44%)`,
+                    background: `radial-gradient(circle at 50% 50%, ${preview.accent}33, transparent 44%)`,
                   }}
                 />
 
                 <div className="relative z-10 grid gap-5 md:grid-cols-[110px_minmax(0,1fr)_minmax(210px,300px)_32px] md:items-center">
                   <div className="flex items-center gap-4 text-xs font-mono">
-                    <span className="text-primary">{project.number}</span>
+                    <span className="text-primary">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
                     <span className="text-muted-foreground">{project.year}</span>
                   </div>
 
@@ -440,7 +416,7 @@ export function FeaturedProjectsSection() {
                       {project.category}
                     </span>
                     <div className="flex flex-wrap gap-2">
-                      {project.tech.map((tech) => (
+                      {project.tech_stack.map((tech) => (
                         <span
                           key={tech}
                           className="rounded-full border border-border/50 bg-muted/50 px-2.5 py-1 text-[11px] font-mono text-muted-foreground transition-colors duration-500 group-hover/project:border-primary/30 group-hover/project:text-foreground"
@@ -453,7 +429,7 @@ export function FeaturedProjectsSection() {
 
                   <ArrowUpRight className="hidden h-5 w-5 -rotate-45 text-muted-foreground transition-all duration-500 group-hover/project:rotate-0 group-hover/project:text-[var(--project-accent)] md:block" />
                 </div>
-              </a>
+              </Link>
             );
           })}
         </div>

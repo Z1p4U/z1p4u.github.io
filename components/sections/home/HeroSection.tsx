@@ -1,8 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Download, Github, Mail, Phone, ArrowDown } from "lucide-react";
+import {
+  Download,
+  Github,
+  Mail,
+  Phone,
+  ArrowDown,
+  type LucideIcon,
+} from "lucide-react";
 import Link from "next/link";
+import { usePortfolioOverview } from "@/hooks/use-public-portfolio";
 import { setOutlineButtonPosition } from "@/lib/outline-button";
 
 const roles = [
@@ -12,16 +20,27 @@ const roles = [
   "React Native Developer",
 ];
 
-const socialLinks = [
-  { href: "https://github.com/Z1p4U", icon: Github, label: "GitHub" },
-  { href: "mailto:zipshigoto310801@gmail.com", icon: Mail, label: "Email" },
-  { href: "tel:+84399754064", icon: Phone, label: "Phone" },
-];
-
 export function HeroSection() {
+  const { profile } = usePortfolioOverview();
   const [roleIndex, setRoleIndex] = useState(0);
   const [displayText, setDisplayText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
+  const firstName = profile.name.split(" ").slice(0, 2).join(" ");
+  const lastName = profile.name.split(" ").slice(2).join(" ") || profile.name;
+  const phoneHref = profile.phone
+    ? `tel:${profile.phone.replace(/[^\d+]/g, "")}`
+    : null;
+  const socialLinks = [
+    profile.github_url
+      ? { href: profile.github_url, icon: Github, label: "GitHub" }
+      : null,
+    { href: `mailto:${profile.email}`, icon: Mail, label: "Email" },
+    phoneHref ? { href: phoneHref, icon: Phone, label: "Phone" } : null,
+  ].filter(Boolean) as Array<{
+    href: string;
+    icon: LucideIcon;
+    label: string;
+  }>;
 
   useEffect(() => {
     const role = roles[roleIndex];
@@ -54,15 +73,15 @@ export function HeroSection() {
         <div className="flex items-center gap-4 mb-8">
           <div className="h-px w-12 bg-primary" />
           <span className="text-xs font-mono text-primary uppercase leading-relaxed">
-            Available for freelance & part-time
+            {profile.availability ?? "Available for freelance & part-time"}
           </span>
         </div>
 
         {/* Giant name */}
         <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.92] text-foreground">
-          {"Thant Zin"}
+          {firstName}
           <br />
-          <span className="text-primary">{"Htet"}</span>
+          <span className="text-primary">{lastName}</span>
           <span className="text-primary">.</span>
         </h1>
 
@@ -79,9 +98,7 @@ export function HeroSection() {
 
         {/* Description */}
         <p className="mt-6 text-muted-foreground leading-relaxed max-w-2xl text-base md:text-lg">
-          {
-            "Full-Stack Developer with 3+ years of experience building web applications, mobile apps, e-commerce platforms, CMS solutions, and custom business systems using React, Laravel, Node.js, and React Native. Available for freelance and part-time work."
-          }
+          {profile.summary}
         </p>
 
         {/* CTA + Socials row */}
@@ -118,23 +135,27 @@ export function HeroSection() {
             >
               <span>View Work</span>
             </Link>
-            <a
-              href="/assets/cv/CV.pdf"
-              download
-              className="site-outline-button inline-flex items-center gap-2 px-8 py-3.5 border border-border text-foreground font-medium rounded-lg"
-              onPointerEnter={setOutlineButtonPosition}
-              onPointerMove={setOutlineButtonPosition}
-            >
-              <Download className="h-4 w-4" />
-              <span>Download CV</span>
-            </a>
+            {profile.cv_url ? (
+              <a
+                href={profile.cv_url}
+                download
+                className="site-outline-button inline-flex items-center gap-2 px-8 py-3.5 border border-border text-foreground font-medium rounded-lg"
+                onPointerEnter={setOutlineButtonPosition}
+                onPointerMove={setOutlineButtonPosition}
+              >
+                <Download className="h-4 w-4" />
+                <span>Download CV</span>
+              </a>
+            ) : null}
           </div>
         </div>
 
         {/* Stats strip */}
         <div className="mt-16 flex flex-wrap items-center gap-8 md:gap-16 border-t border-border/50 pt-8">
           <div>
-            <p className="text-3xl md:text-4xl font-bold text-foreground">3+</p>
+            <p className="text-3xl md:text-4xl font-bold text-foreground">
+              {profile.stats.years_experience}+
+            </p>
             <p className="text-xs font-mono text-muted-foreground mt-1 uppercase tracking-wider">
               Years Exp.
             </p>
@@ -142,7 +163,7 @@ export function HeroSection() {
           <div className="h-8 w-px bg-border/50 hidden md:block" />
           <div>
             <p className="text-3xl md:text-4xl font-bold text-foreground">
-              20+
+              {profile.stats.clients_count}+
             </p>
             <p className="text-xs font-mono text-muted-foreground mt-1 uppercase tracking-wider">
               Clients
@@ -151,7 +172,7 @@ export function HeroSection() {
           <div className="h-8 w-px bg-border/50 hidden md:block" />
           <div>
             <p className="text-3xl md:text-4xl font-bold text-foreground">
-              30+
+              {profile.stats.projects_count}+
             </p>
             <p className="text-xs font-mono text-muted-foreground mt-1 uppercase tracking-wider">
               Projects

@@ -1,19 +1,10 @@
 import type { Metadata } from "next";
-import { Inter, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import { Suspense } from "react";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/footer";
-import { StarField } from "@/components/star-field";
-import { PageTransition } from "@/components/page-transition";
-import { GoogleAnalyticsPageView } from "@/components/google-analytics-page-view";
+import { SiteChrome } from "@/components/site-chrome";
+import { AppProviders } from "@/components/app-providers";
 import "./globals.css";
 
-const _inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const _geistMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-geist-mono",
-});
 const GA_MEASUREMENT_ID = "G-RC2J8C15WC";
 
 export const metadata: Metadata = {
@@ -82,9 +73,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${_inter.variable} ${_geistMono.variable} font-sans antialiased`}
-      >
+      <body className="font-sans antialiased">
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
           strategy="afterInteractive"
@@ -98,14 +87,10 @@ export default function RootLayout({
           `}
         </Script>
         <Suspense fallback={null}>
-          <GoogleAnalyticsPageView measurementId={GA_MEASUREMENT_ID} />
+          <AppProviders>
+            <SiteChrome>{children}</SiteChrome>
+          </AppProviders>
         </Suspense>
-        <StarField />
-        <Navbar />
-        <main className="site-motion-shell">
-          <PageTransition>{children}</PageTransition>
-        </main>
-        <Footer />
       </body>
     </html>
   );
