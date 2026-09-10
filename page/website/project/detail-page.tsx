@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 
 import { fetchProject } from "@/lib/portfolio-api";
+import { LoadingState } from "@/components/ui/loading-state";
 import type {
   PortfolioProject,
   ProjectDetailSection,
@@ -116,15 +117,15 @@ function DetailSection({
 
 export function ProjectDetailClient({
   slug,
-  fallbackProject,
+  initialProject,
 }: {
   slug: string;
-  fallbackProject?: PortfolioProject | null;
+  initialProject?: PortfolioProject | null;
 }) {
   const [project, setProject] = useState<PortfolioProject | null>(
-    fallbackProject ?? null,
+    initialProject ?? null,
   );
-  const [hasLoaded, setHasLoaded] = useState(Boolean(fallbackProject));
+  const [hasLoaded, setHasLoaded] = useState(Boolean(initialProject));
   const sections = useMemo(
     () =>
       [...(project?.detail_sections ?? [])].sort(
@@ -154,9 +155,15 @@ export function ProjectDetailClient({
           <p className="text-xs font-mono uppercase tracking-[0.24em] text-primary">
             Project Detail
           </p>
-          <h1 className="mt-3 text-3xl font-semibold">
-            {hasLoaded ? "Project not found" : "Loading project..."}
-          </h1>
+          {hasLoaded ? (
+            <h1 className="mt-3 text-3xl font-semibold">Project not found</h1>
+          ) : (
+            <LoadingState
+              compact
+              className="mt-5 min-w-72"
+              label={`Loading ${slug ? slug.replaceAll("-", " ") : "project"}...`}
+            />
+          )}
           <Link
             href="/project"
             className="mt-6 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary"
@@ -180,8 +187,8 @@ export function ProjectDetailClient({
           Back to Projects
         </Link>
 
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-end">
-          <div>
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start">
+          <div className="min-w-0">
             <div className="mb-5 flex flex-wrap items-center gap-2">
               <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-mono text-primary">
                 {project.category}
@@ -198,7 +205,10 @@ export function ProjectDetailClient({
                 </span>
               ) : null}
             </div>
-            <h1 className="max-w-4xl text-4xl font-bold tracking-tight text-foreground md:text-6xl">
+            <h1
+              className="w-full truncate text-4xl font-bold tracking-tight text-foreground md:text-6xl"
+              title={project.title}
+            >
               {project.title}
             </h1>
             <p className="mt-6 max-w-3xl text-base leading-8 text-muted-foreground md:text-lg">

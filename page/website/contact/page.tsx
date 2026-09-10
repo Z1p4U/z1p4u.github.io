@@ -1,7 +1,16 @@
 "use client";
 
-import { type SyntheticEvent, useEffect, useState } from "react";
-import { Send, Mail, MapPin, Clock, Github, Phone } from "lucide-react";
+import { type SyntheticEvent, useEffect, useMemo, useState } from "react";
+import {
+  Send,
+  Mail,
+  MapPin,
+  Clock,
+  Github,
+  Phone,
+  type LucideIcon,
+} from "lucide-react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -13,89 +22,121 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import axiosInstance from "@/constants/axios";
 import { endpoints } from "@/constants/endpoints";
+import { usePortfolioOverview } from "@/hooks/use-public-portfolio";
 
-const contactInfo = [
-  {
-    icon: Mail,
-    label: "Email",
-    value: "zipshigoto310801@gmail.com",
-    href: "mailto:zipshigoto310801@gmail.com",
-  },
-  {
-    icon: Phone,
-    label: "Phone",
-    value: "+95 979 164 3043 / +84 39 975 4064",
-    href: "tel:+84399754064",
-  },
-  {
-    icon: MapPin,
-    label: "Location",
-    value: "Bangkok, Thailand (Remote)",
-    href: null,
-  },
-  {
-    icon: Clock,
-    label: "Response Time",
-    value: "Usually within 24 hours",
-    href: null,
-  },
-];
+type ContactInfoItem = {
+  icon: LucideIcon;
+  label: string;
+  value: string;
+  href: string | null;
+};
 
-const socialLinks = [
-  { icon: Github, label: "GitHub", href: "https://github.com/Z1p4U" },
-  { icon: Mail, label: "Email", href: "mailto:zipshigoto310801@gmail.com" },
-];
+type SocialLink = {
+  icon: LucideIcon;
+  label: string;
+  href: string;
+};
 
-const budgetRanges = [
-  { value: "100-300", label: "$100 - $300" },
-  { value: "300-700", label: "$300 - $700" },
-  { value: "700-1500", label: "$700 - $1,500" },
-  { value: "1500-3000", label: "$1,500 - $3,000" },
-  { value: "3000+", label: "$3,000+" },
-];
+function isPresent<T>(value: T | null): value is T {
+  return value !== null;
+}
 
-export default function ContactPage() {
-  const [formState, setFormState] = useState({
+function createInitialFormState(formStartedAt = "") {
+  return {
     name: "",
     email: "",
     subject: "",
     budget: "",
     message: "",
-  });
+    website: "",
+    form_started_at: formStartedAt,
+  };
+}
+
+export default function ContactPage() {
+  const { profile } = usePortfolioOverview();
+  const [formState, setFormState] = useState(createInitialFormState);
   const [submitted, setSubmitted] = useState(false);
   const [isSending, setIsSending] = useState(false);
-  const [sendError, setSendError] = useState<string | null>(null);
+  const contactInfo = useMemo<ContactInfoItem[]>(
+    () =>
+      [
+        profile?.email
+          ? {
+              icon: Mail,
+              label: "Email",
+              value: profile.email,
+              href: `mailto:${profile.email}`,
+            }
+          : null,
+        profile?.phone
+          ? {
+              icon: Phone,
+              label: "Phone",
+              value: profile.phone,
+              href: `tel:${profile.phone.replace(/[^\d+]/g, "")}`,
+            }
+          : null,
+        profile?.location
+          ? {
+              icon: MapPin,
+              label: "Location",
+              value: profile.location,
+              href: null,
+            }
+          : null,
+        profile?.availability
+          ? {
+              icon: Clock,
+              label: "Availability",
+              value: profile.availability,
+              href: null,
+            }
+          : null,
+      ].filter(isPresent),
+    [profile],
+  );
+  const socialLinks = useMemo<SocialLink[]>(
+    () =>
+      [
+        profile?.github_url
+          ? { icon: Github, label: "GitHub", href: profile.github_url }
+          : null,
+        profile?.email
+          ? { icon: Mail, label: "Email", href: `mailto:${profile.email}` }
+          : null,
+      ].filter(isPresent),
+    [profile],
+  );
 
   useEffect(() => {
-    if (!new URLSearchParams(window.location.search).has("sent")) {
-      return;
-    }
+    const frame = window.requestAnimationFrame(() => {
+      setFormState((current) =>
+        current.form_started_at
+          ? current
+          : { ...current, form_started_at: String(Date.now()) },
+      );
 
-    const frame = window.requestAnimationFrame(() => setSubmitted(true));
+      if (new URLSearchParams(window.location.search).has("sent")) {
+        setSubmitted(true);
+      }
+    });
+
     return () => window.cancelAnimationFrame(frame);
   }, []);
 
   const resetForm = () => {
     setSubmitted(false);
     setIsSending(false);
-    setSendError(null);
-    setFormState({ name: "", email: "", subject: "", budget: "", message: "" });
+    setFormState(createInitialFormState(String(Date.now())));
   };
 
   const handleSubmit = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsSending(true);
-    setSendError(null);
 
     try {
       await axiosInstance.post(endpoints.CONTACT_MESSAGES, {
@@ -104,15 +145,10 @@ export default function ContactPage() {
       });
 
       setSubmitted(true);
-      setFormState({
-        name: "",
-        email: "",
-        subject: "",
-        budget: "",
-        message: "",
-      });
+      setFormState(createInitialFormState(String(Date.now())));
+      toast.success("Message sent. I will get back to you soon.");
     } catch {
-      setSendError(
+      toast.error(
         "I could not send this through the API. Please email me directly for now.",
       );
     } finally {
@@ -137,8 +173,9 @@ export default function ContactPage() {
           </p>
         </div>
 
-        <div className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          {contactInfo.map((info) => (
+        {contactInfo.length ? (
+          <div className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            {contactInfo.map((info) => (
             <div
               key={info.label}
               className="group rounded-2xl border border-border/50 bg-secondary/30 p-5 transition-all duration-300 hover:border-primary/30"
@@ -164,8 +201,9 @@ export default function ContactPage() {
                 </p>
               )}
             </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : null}
 
         <div className="grid items-start gap-6 lg:grid-cols-5">
           {/* Contact Form */}
@@ -199,6 +237,23 @@ export default function ContactPage() {
                 onSubmit={handleSubmit}
                 className="flex flex-col gap-6"
               >
+                <input
+                  type="text"
+                  name="website"
+                  value={formState.website}
+                  onChange={(e) =>
+                    setFormState({ ...formState, website: e.target.value })
+                  }
+                  className="hidden"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                />
+                <input
+                  type="hidden"
+                  name="form_started_at"
+                  value={formState.form_started_at}
+                />
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div className="flex flex-col gap-2">
                     <Label htmlFor="name">Name</Label>
@@ -250,27 +305,17 @@ export default function ContactPage() {
                   </div>
                   <div className="flex flex-col gap-2">
                     <Label htmlFor="budget">Budget Range</Label>
-                    <Select
-                      value={formState.budget || undefined}
-                      onValueChange={(value) =>
-                        setFormState({ ...formState, budget: value })
+                    <Input
+                      id="budget"
+                      name="budget"
+                      type="text"
+                      value={formState.budget}
+                      onChange={(e) =>
+                        setFormState({ ...formState, budget: e.target.value })
                       }
-                    >
-                      <SelectTrigger
-                        id="budget"
-                        name="budget"
-                        className="w-full h-11 bg-secondary/20 border-border/50 focus-visible:border-primary/50"
-                      >
-                        <SelectValue placeholder="Select budget" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {budgetRanges.map((range) => (
-                          <SelectItem key={range.value} value={range.value}>
-                            {range.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                      placeholder="Expected budget"
+                      className="h-11 bg-secondary/20 border-border/50 focus-visible:border-primary/50"
+                    />
                   </div>
                 </div>
 
@@ -289,12 +334,6 @@ export default function ContactPage() {
                     className="min-h-36 bg-secondary/20 border-border/50 focus-visible:border-primary/50 resize-none"
                   />
                 </div>
-
-                {sendError ? (
-                  <p className="rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-                    {sendError}
-                  </p>
-                ) : null}
 
                 <Button
                   type="submit"
@@ -315,30 +354,35 @@ export default function ContactPage() {
                 Quick Contact
               </p>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Prefer direct communication? Share your brief, timeline, and
-                expected budget range. I am currently based in Bangkok and
-                available for freelance and part-time project work.
+                {[
+                  "Prefer direct communication? Share your brief, timeline, and expected budget range.",
+                  profile?.location ? `Current base: ${profile.location}.` : null,
+                  profile?.availability ?? null,
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
               </p>
             </div>
 
-            {/* Social */}
-            <div className="p-6 rounded-2xl border border-border/50 bg-secondary/30">
-              <p className="text-xs font-mono text-muted-foreground uppercase tracking-wider mb-4">
-                Find Me Online
-              </p>
-              <div className="flex items-center gap-3">
-                {socialLinks.map((social) => (
-                  <a
-                    key={social.label}
-                    href={social.href}
-                    aria-label={social.label}
-                    className="flex items-center justify-center w-11 h-11 rounded-full border border-border/50 text-muted-foreground hover:text-primary hover:border-primary/50 transition-all duration-200"
-                  >
-                    <social.icon className="w-5 h-5" />
-                  </a>
-                ))}
+            {socialLinks.length ? (
+              <div className="p-6 rounded-2xl border border-border/50 bg-secondary/30">
+                <p className="text-xs font-mono text-muted-foreground uppercase tracking-wider mb-4">
+                  Find Me Online
+                </p>
+                <div className="flex items-center gap-3">
+                  {socialLinks.map((social) => (
+                    <a
+                      key={social.label}
+                      href={social.href}
+                      aria-label={social.label}
+                      className="flex items-center justify-center w-11 h-11 rounded-full border border-border/50 text-muted-foreground hover:text-primary hover:border-primary/50 transition-all duration-200"
+                    >
+                      <social.icon className="w-5 h-5" />
+                    </a>
+                  ))}
+                </div>
               </div>
-            </div>
+            ) : null}
           </div>
         </div>
       </div>

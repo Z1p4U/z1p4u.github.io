@@ -13,7 +13,6 @@ import {
   useRef,
   useState,
 } from "react";
-import { fallbackProjects } from "@/lib/portfolio-data";
 import type { PortfolioProject } from "@/constants/types";
 import { usePortfolioOverview } from "@/hooks/use-public-portfolio";
 
@@ -51,7 +50,10 @@ function getProjectPreview(project: PortfolioProject, index: number) {
 }
 
 function isMobileProject(project: PortfolioProject) {
-  return project.category === "Mobile Apps";
+  return (
+    project.linkKind === "android" ||
+    project.tech_stack.some((tech) => tech.toLowerCase().includes("native"))
+  );
 }
 
 function getFloatingPreviewSize(project: PortfolioProject) {
@@ -62,13 +64,7 @@ function getFloatingPreviewSize(project: PortfolioProject) {
 
 export function FeaturedProjectsSection() {
   const { featured_projects } = usePortfolioOverview();
-  const featuredProjects = useMemo(
-    () =>
-      featured_projects.length > 0
-        ? featured_projects
-        : fallbackProjects.filter((project) => project.is_featured),
-    [featured_projects],
-  );
+  const featuredProjects = useMemo(() => featured_projects, [featured_projects]);
   const sectionRef = useRef<HTMLDivElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
   const previewInnerRef = useRef<HTMLDivElement>(null);
@@ -84,13 +80,21 @@ export function FeaturedProjectsSection() {
   const [loadedPreviewImages, setLoadedPreviewImages] = useState<
     Record<string, boolean>
   >({});
-  const activeProject = featuredProjects[activeIndex] ?? featuredProjects[0];
-  const activePreview = getProjectPreview(activeProject, activeIndex);
-  const activePreviewSize = getFloatingPreviewSize(activeProject);
-  const activeIsMobile = isMobileProject(activeProject);
-  const activePreviewImage = activePreview.image;
+  const safeActiveIndex =
+    featuredProjects.length > 0
+      ? Math.min(activeIndex, featuredProjects.length - 1)
+      : 0;
+  const activeProject = featuredProjects[safeActiveIndex] ?? null;
+  const activePreview = activeProject
+    ? getProjectPreview(activeProject, safeActiveIndex)
+    : null;
+  const activePreviewSize = activeProject
+    ? getFloatingPreviewSize(activeProject)
+    : { width: 430, height: 410 };
+  const activeIsMobile = activeProject ? isMobileProject(activeProject) : false;
+  const activePreviewImage = activePreview?.image ?? null;
   const isActivePreviewImageLoaded =
-    !activePreviewImage || loadedPreviewImages[activePreviewImage];
+    !activePreviewImage || Boolean(loadedPreviewImages[activePreviewImage]);
 
   const markPreviewImageLoaded = useCallback((src: string) => {
     setLoadedPreviewImages((current) =>
@@ -125,7 +129,9 @@ export function FeaturedProjectsSection() {
     const previewInner = previewInnerRef.current;
     if (!preview || !cursor || !previewInner) return;
 
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
     if (reduceMotion) return;
 
     gsap.set(preview, {
@@ -169,7 +175,7 @@ export function FeaturedProjectsSection() {
     return () => {
       gsap.killTweensOf([preview, cursor, previewInner]);
     };
-  }, []);
+  }, [featuredProjects.length]);
 
   const moveFloatingLayers = (
     event: MouseEvent<HTMLElement>,
@@ -181,8 +187,11 @@ export function FeaturedProjectsSection() {
     const rect = section.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
+    const project = featuredProjects[projectIndex];
+    if (!project) return;
+
     const { width: previewWidth, height: previewHeight } =
-      getFloatingPreviewSize(featuredProjects[projectIndex]);
+      getFloatingPreviewSize(project);
     const clampedX = Math.min(
       Math.max(x - 72, previewWidth / 2),
       rect.width - previewWidth / 2,
@@ -240,6 +249,8 @@ export function FeaturedProjectsSection() {
     });
   };
 
+  if (!activeProject || !activePreview) return null;
+
   return (
     <section id="projects" className="relative z-10 py-24 px-6 lg:px-16">
       <div
@@ -252,7 +263,7 @@ export function FeaturedProjectsSection() {
             <div className="flex items-center gap-4 mb-4">
               <div className="h-px w-12 bg-primary" />
               <span className="text-xs font-mono tracking-[0.3em] text-primary uppercase">
-                Selected Work
+                Selected Projects
               </span>
             </div>
             <h2 className="text-3xl md:text-5xl font-bold text-foreground text-balance">
@@ -368,15 +379,15 @@ export function FeaturedProjectsSection() {
 
         <div className="relative flex flex-col">
           {featuredProjects.map((project, i) => {
-            const isDimmed = isHovering && activeIndex !== i;
+            const isDimmed = isHovering && safeActiveIndex !== i;
             const preview = getProjectPreview(project, i);
 
             return (
               <Link
                 key={project.slug}
-                href={`/project/detail?slug=${project.slug}`}
+                href={`/project/${project.slug}`}
                 onMouseEnter={(event) => showFloatingLayers(i, event)}
-                onMouseMove={moveFloatingLayers}
+                onMouseMove={(event) => moveFloatingLayers(event, i)}
                 className={`group/project relative -mx-6 overflow-hidden border-t border-border/30 px-6 py-7 transition-all duration-700 last:border-b md:py-9 ${
                   isDimmed ? "opacity-45" : "opacity-100"
                 }`}

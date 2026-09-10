@@ -1,0 +1,1123 @@
+[
+  {
+    "id": "schema.public",
+    "label": "Create schema \"public\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres"
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "Create schema \"public\"",
+        "sql": "CREATE SCHEMA IF NOT EXISTS \"public\"",
+        "params": []
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "table.contact_messages",
+    "label": "Create table \"contact_messages\"",
+    "summary": "Creates table \"contact_messages\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "contact_messages"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"contact_messages\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contact_messages\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"contact_messages\"",
+        "sql": "CREATE TABLE \"public\".\"contact_messages\" (\n  \"budget\" text,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"email\" text NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"message\" text NOT NULL,\n  \"name\" text NOT NULL,\n  \"phone\" text,\n  \"readAt\" timestamptz,\n  \"status\" text DEFAULT 'unread' NOT NULL,\n  \"subject\" text NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"contact_messages\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contact_messages\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.experiences",
+    "label": "Create table \"experiences\"",
+    "summary": "Creates table \"experiences\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "experiences"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"experiences\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"experiences\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"experiences\"",
+        "sql": "CREATE TABLE \"public\".\"experiences\" (\n  \"company\" text,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"description\" text NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"isPublished\" bool DEFAULT true NOT NULL,\n  \"period\" text NOT NULL,\n  \"sortOrder\" int4 DEFAULT 0 NOT NULL,\n  \"title\" text NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"experiences\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"experiences\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.profiles",
+    "label": "Create table \"profiles\"",
+    "summary": "Creates table \"profiles\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "profiles"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"profiles\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"profiles\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"profiles\"",
+        "sql": "CREATE TABLE \"public\".\"profiles\" (\n  \"availability\" text,\n  \"bio\" text,\n  \"clientsCount\" int4 DEFAULT 0 NOT NULL,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"cvUrl\" text,\n  \"email\" text NOT NULL,\n  \"githubUrl\" text,\n  \"headline\" text NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"linkedinUrl\" text,\n  \"location\" text,\n  \"name\" text NOT NULL,\n  \"phone\" text,\n  \"projectsCount\" int4 DEFAULT 0 NOT NULL,\n  \"summary\" text NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  \"yearsExperience\" int4 DEFAULT 0 NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"profiles\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"profiles\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.project_detail_sections",
+    "label": "Create table \"project_detail_sections\"",
+    "summary": "Creates table \"project_detail_sections\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "project_detail_sections"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"project_detail_sections\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"project_detail_sections\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"project_detail_sections\"",
+        "sql": "CREATE TABLE \"public\".\"project_detail_sections\" (\n  \"blockType\" text DEFAULT 'contribution' NOT NULL,\n  \"body\" text NOT NULL,\n  \"caption\" text,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"externalUrl\" text,\n  \"id\" SERIAL NOT NULL,\n  \"imageAlt\" text,\n  \"imageUrl\" text,\n  \"isPublished\" bool DEFAULT true NOT NULL,\n  \"layout\" text DEFAULT 'image_right' NOT NULL,\n  \"metadata\" text,\n  \"projectId\" int4 NOT NULL,\n  \"sortOrder\" int4 DEFAULT 0 NOT NULL,\n  \"title\" text NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"project_detail_sections\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"project_detail_sections\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.projects",
+    "label": "Create table \"projects\"",
+    "summary": "Creates table \"projects\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "projects"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"projects\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"projects\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"projects\"",
+        "sql": "CREATE TABLE \"public\".\"projects\" (\n  \"category\" text NOT NULL,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"description\" text NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"imageUrl\" text,\n  \"isFeatured\" bool DEFAULT false NOT NULL,\n  \"isPublished\" bool DEFAULT true NOT NULL,\n  \"linkKind\" text,\n  \"lowVisibility\" bool DEFAULT false NOT NULL,\n  \"projectUrl\" text,\n  \"repositoryUrl\" text,\n  \"slug\" text NOT NULL,\n  \"sortOrder\" int4 DEFAULT 0 NOT NULL,\n  \"source\" text,\n  \"techStack\" text DEFAULT '[]' NOT NULL,\n  \"title\" text NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  \"year\" text,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"projects\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"projects\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.services",
+    "label": "Create table \"services\"",
+    "summary": "Creates table \"services\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "services"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"services\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"services\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"services\"",
+        "sql": "CREATE TABLE \"public\".\"services\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"deliverables\" text DEFAULT '[]' NOT NULL,\n  \"description\" text,\n  \"id\" SERIAL NOT NULL,\n  \"isPublished\" bool DEFAULT true NOT NULL,\n  \"slug\" text NOT NULL,\n  \"sortOrder\" int4 DEFAULT 0 NOT NULL,\n  \"summary\" text NOT NULL,\n  \"techStack\" text DEFAULT '[]' NOT NULL,\n  \"title\" text NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"services\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"services\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.skills",
+    "label": "Create table \"skills\"",
+    "summary": "Creates table \"skills\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "skills"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"skills\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"skills\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"skills\"",
+        "sql": "CREATE TABLE \"public\".\"skills\" (\n  \"category\" text NOT NULL,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"isPublished\" bool DEFAULT true NOT NULL,\n  \"name\" text NOT NULL,\n  \"proficiency\" int4 DEFAULT 80 NOT NULL,\n  \"sortOrder\" int4 DEFAULT 0 NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"skills\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"skills\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.users",
+    "label": "Create table \"users\"",
+    "summary": "Creates table \"users\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "users"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"users\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"users\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"users\"",
+        "sql": "CREATE TABLE \"public\".\"users\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"email\" text NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"isAdmin\" bool DEFAULT true NOT NULL,\n  \"name\" text NOT NULL,\n  \"passwordHash\" text NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"users\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"users\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.projects.projects_slug_key",
+    "label": "Add unique constraint on \"projects\" (slug)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "projects_slug_key",
+        "table": "projects"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"projects_slug_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "projects_slug_key",
+          "public",
+          "\"public\".\"projects\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"projects_slug_key\"",
+        "sql": "ALTER TABLE \"public\".\"projects\" ADD CONSTRAINT \"projects_slug_key\" UNIQUE (\"slug\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"projects_slug_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "projects_slug_key",
+          "public",
+          "\"public\".\"projects\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.services.services_slug_key",
+    "label": "Add unique constraint on \"services\" (slug)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "services_slug_key",
+        "table": "services"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"services_slug_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "services_slug_key",
+          "public",
+          "\"public\".\"services\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"services_slug_key\"",
+        "sql": "ALTER TABLE \"public\".\"services\" ADD CONSTRAINT \"services_slug_key\" UNIQUE (\"slug\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"services_slug_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "services_slug_key",
+          "public",
+          "\"public\".\"services\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.users.users_email_key",
+    "label": "Add unique constraint on \"users\" (email)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "users_email_key",
+        "table": "users"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"users_email_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "users_email_key",
+          "public",
+          "\"public\".\"users\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"users_email_key\"",
+        "sql": "ALTER TABLE \"public\".\"users\" ADD CONSTRAINT \"users_email_key\" UNIQUE (\"email\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"users_email_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "users_email_key",
+          "public",
+          "\"public\".\"users\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.contact_messages.contact_messages_createdAt_idx_9575dbd7",
+    "label": "Create index \"contact_messages_createdAt_idx_9575dbd7\" on \"contact_messages\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "contact_messages_createdAt_idx_9575dbd7",
+        "table": "contact_messages"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"contact_messages_createdAt_idx_9575dbd7\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contact_messages_createdAt_idx_9575dbd7\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"contact_messages_createdAt_idx_9575dbd7\"",
+        "sql": "CREATE INDEX \"contact_messages_createdAt_idx_9575dbd7\" ON \"public\".\"contact_messages\" (\"createdAt\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"contact_messages_createdAt_idx_9575dbd7\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contact_messages_createdAt_idx_9575dbd7\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.contact_messages.contact_messages_status_idx_e98638ab",
+    "label": "Create index \"contact_messages_status_idx_e98638ab\" on \"contact_messages\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "contact_messages_status_idx_e98638ab",
+        "table": "contact_messages"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"contact_messages_status_idx_e98638ab\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contact_messages_status_idx_e98638ab\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"contact_messages_status_idx_e98638ab\"",
+        "sql": "CREATE INDEX \"contact_messages_status_idx_e98638ab\" ON \"public\".\"contact_messages\" (\"status\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"contact_messages_status_idx_e98638ab\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contact_messages_status_idx_e98638ab\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.experiences.experiences_isPublished_idx_d7ee5985",
+    "label": "Create index \"experiences_isPublished_idx_d7ee5985\" on \"experiences\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "experiences_isPublished_idx_d7ee5985",
+        "table": "experiences"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"experiences_isPublished_idx_d7ee5985\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"experiences_isPublished_idx_d7ee5985\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"experiences_isPublished_idx_d7ee5985\"",
+        "sql": "CREATE INDEX \"experiences_isPublished_idx_d7ee5985\" ON \"public\".\"experiences\" (\"isPublished\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"experiences_isPublished_idx_d7ee5985\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"experiences_isPublished_idx_d7ee5985\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.experiences.experiences_sortOrder_idx_ebf2eac2",
+    "label": "Create index \"experiences_sortOrder_idx_ebf2eac2\" on \"experiences\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "experiences_sortOrder_idx_ebf2eac2",
+        "table": "experiences"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"experiences_sortOrder_idx_ebf2eac2\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"experiences_sortOrder_idx_ebf2eac2\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"experiences_sortOrder_idx_ebf2eac2\"",
+        "sql": "CREATE INDEX \"experiences_sortOrder_idx_ebf2eac2\" ON \"public\".\"experiences\" (\"sortOrder\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"experiences_sortOrder_idx_ebf2eac2\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"experiences_sortOrder_idx_ebf2eac2\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.project_detail_sections.project_detail_sections_isPublished_idx_d7ee5985",
+    "label": "Create index \"project_detail_sections_isPublished_idx_d7ee5985\" on \"project_detail_sections\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "project_detail_sections_isPublished_idx_d7ee5985",
+        "table": "project_detail_sections"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"project_detail_sections_isPublished_idx_d7ee5985\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"project_detail_sections_isPublished_idx_d7ee5985\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"project_detail_sections_isPublished_idx_d7ee5985\"",
+        "sql": "CREATE INDEX \"project_detail_sections_isPublished_idx_d7ee5985\" ON \"public\".\"project_detail_sections\" (\"isPublished\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"project_detail_sections_isPublished_idx_d7ee5985\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"project_detail_sections_isPublished_idx_d7ee5985\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.project_detail_sections.project_detail_sections_projectId_idx_a96e4d92",
+    "label": "Create index \"project_detail_sections_projectId_idx_a96e4d92\" on \"project_detail_sections\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "project_detail_sections_projectId_idx_a96e4d92",
+        "table": "project_detail_sections"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"project_detail_sections_projectId_idx_a96e4d92\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"project_detail_sections_projectId_idx_a96e4d92\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"project_detail_sections_projectId_idx_a96e4d92\"",
+        "sql": "CREATE INDEX \"project_detail_sections_projectId_idx_a96e4d92\" ON \"public\".\"project_detail_sections\" (\"projectId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"project_detail_sections_projectId_idx_a96e4d92\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"project_detail_sections_projectId_idx_a96e4d92\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.project_detail_sections.project_detail_sections_sortOrder_idx_ebf2eac2",
+    "label": "Create index \"project_detail_sections_sortOrder_idx_ebf2eac2\" on \"project_detail_sections\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "project_detail_sections_sortOrder_idx_ebf2eac2",
+        "table": "project_detail_sections"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"project_detail_sections_sortOrder_idx_ebf2eac2\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"project_detail_sections_sortOrder_idx_ebf2eac2\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"project_detail_sections_sortOrder_idx_ebf2eac2\"",
+        "sql": "CREATE INDEX \"project_detail_sections_sortOrder_idx_ebf2eac2\" ON \"public\".\"project_detail_sections\" (\"sortOrder\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"project_detail_sections_sortOrder_idx_ebf2eac2\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"project_detail_sections_sortOrder_idx_ebf2eac2\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.projects.projects_category_idx_f2600f8e",
+    "label": "Create index \"projects_category_idx_f2600f8e\" on \"projects\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "projects_category_idx_f2600f8e",
+        "table": "projects"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"projects_category_idx_f2600f8e\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"projects_category_idx_f2600f8e\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"projects_category_idx_f2600f8e\"",
+        "sql": "CREATE INDEX \"projects_category_idx_f2600f8e\" ON \"public\".\"projects\" (\"category\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"projects_category_idx_f2600f8e\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"projects_category_idx_f2600f8e\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.projects.projects_isFeatured_idx_4ec5a125",
+    "label": "Create index \"projects_isFeatured_idx_4ec5a125\" on \"projects\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "projects_isFeatured_idx_4ec5a125",
+        "table": "projects"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"projects_isFeatured_idx_4ec5a125\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"projects_isFeatured_idx_4ec5a125\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"projects_isFeatured_idx_4ec5a125\"",
+        "sql": "CREATE INDEX \"projects_isFeatured_idx_4ec5a125\" ON \"public\".\"projects\" (\"isFeatured\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"projects_isFeatured_idx_4ec5a125\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"projects_isFeatured_idx_4ec5a125\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.projects.projects_isPublished_idx_d7ee5985",
+    "label": "Create index \"projects_isPublished_idx_d7ee5985\" on \"projects\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "projects_isPublished_idx_d7ee5985",
+        "table": "projects"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"projects_isPublished_idx_d7ee5985\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"projects_isPublished_idx_d7ee5985\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"projects_isPublished_idx_d7ee5985\"",
+        "sql": "CREATE INDEX \"projects_isPublished_idx_d7ee5985\" ON \"public\".\"projects\" (\"isPublished\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"projects_isPublished_idx_d7ee5985\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"projects_isPublished_idx_d7ee5985\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.projects.projects_sortOrder_idx_ebf2eac2",
+    "label": "Create index \"projects_sortOrder_idx_ebf2eac2\" on \"projects\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "projects_sortOrder_idx_ebf2eac2",
+        "table": "projects"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"projects_sortOrder_idx_ebf2eac2\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"projects_sortOrder_idx_ebf2eac2\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"projects_sortOrder_idx_ebf2eac2\"",
+        "sql": "CREATE INDEX \"projects_sortOrder_idx_ebf2eac2\" ON \"public\".\"projects\" (\"sortOrder\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"projects_sortOrder_idx_ebf2eac2\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"projects_sortOrder_idx_ebf2eac2\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.services.services_isPublished_idx_d7ee5985",
+    "label": "Create index \"services_isPublished_idx_d7ee5985\" on \"services\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "services_isPublished_idx_d7ee5985",
+        "table": "services"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"services_isPublished_idx_d7ee5985\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"services_isPublished_idx_d7ee5985\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"services_isPublished_idx_d7ee5985\"",
+        "sql": "CREATE INDEX \"services_isPublished_idx_d7ee5985\" ON \"public\".\"services\" (\"isPublished\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"services_isPublished_idx_d7ee5985\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"services_isPublished_idx_d7ee5985\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.services.services_sortOrder_idx_ebf2eac2",
+    "label": "Create index \"services_sortOrder_idx_ebf2eac2\" on \"services\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "services_sortOrder_idx_ebf2eac2",
+        "table": "services"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"services_sortOrder_idx_ebf2eac2\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"services_sortOrder_idx_ebf2eac2\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"services_sortOrder_idx_ebf2eac2\"",
+        "sql": "CREATE INDEX \"services_sortOrder_idx_ebf2eac2\" ON \"public\".\"services\" (\"sortOrder\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"services_sortOrder_idx_ebf2eac2\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"services_sortOrder_idx_ebf2eac2\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.skills.skills_category_idx_f2600f8e",
+    "label": "Create index \"skills_category_idx_f2600f8e\" on \"skills\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "skills_category_idx_f2600f8e",
+        "table": "skills"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"skills_category_idx_f2600f8e\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"skills_category_idx_f2600f8e\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"skills_category_idx_f2600f8e\"",
+        "sql": "CREATE INDEX \"skills_category_idx_f2600f8e\" ON \"public\".\"skills\" (\"category\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"skills_category_idx_f2600f8e\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"skills_category_idx_f2600f8e\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.skills.skills_isPublished_idx_d7ee5985",
+    "label": "Create index \"skills_isPublished_idx_d7ee5985\" on \"skills\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "skills_isPublished_idx_d7ee5985",
+        "table": "skills"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"skills_isPublished_idx_d7ee5985\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"skills_isPublished_idx_d7ee5985\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"skills_isPublished_idx_d7ee5985\"",
+        "sql": "CREATE INDEX \"skills_isPublished_idx_d7ee5985\" ON \"public\".\"skills\" (\"isPublished\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"skills_isPublished_idx_d7ee5985\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"skills_isPublished_idx_d7ee5985\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.skills.skills_sortOrder_idx_ebf2eac2",
+    "label": "Create index \"skills_sortOrder_idx_ebf2eac2\" on \"skills\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "skills_sortOrder_idx_ebf2eac2",
+        "table": "skills"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"skills_sortOrder_idx_ebf2eac2\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"skills_sortOrder_idx_ebf2eac2\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"skills_sortOrder_idx_ebf2eac2\"",
+        "sql": "CREATE INDEX \"skills_sortOrder_idx_ebf2eac2\" ON \"public\".\"skills\" (\"sortOrder\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"skills_sortOrder_idx_ebf2eac2\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"skills_sortOrder_idx_ebf2eac2\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.project_detail_sections.project_detail_sections_projectId_fkey",
+    "label": "Add foreign key \"project_detail_sections_projectId_fkey\" on \"project_detail_sections\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "project_detail_sections_projectId_fkey",
+        "table": "project_detail_sections"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"project_detail_sections_projectId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "project_detail_sections_projectId_fkey",
+          "public",
+          "\"public\".\"project_detail_sections\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"project_detail_sections_projectId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"project_detail_sections\"\nADD CONSTRAINT \"project_detail_sections_projectId_fkey\"\nFOREIGN KEY (\"projectId\")\nREFERENCES \"public\".\"projects\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"project_detail_sections_projectId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "project_detail_sections_projectId_fkey",
+          "public",
+          "\"public\".\"project_detail_sections\""
+        ]
+      }
+    ]
+  }
+]

@@ -8,11 +8,35 @@ import type {
   PaginatedData,
   PortfolioProfile,
   PortfolioProject,
+  ProjectCategory,
+  ProjectCategoryPayload,
   ProjectDetailSection,
   ProjectDetailSectionPayload,
   ProjectPayload,
+  ProjectSource,
+  ProjectSourcePayload,
+  ProjectTechStack,
+  ProjectTechStackPayload,
   ProfilePayload,
 } from "@/constants/types";
+
+type PaginationQuery = {
+  page?: number;
+  perPage?: number;
+};
+
+type UploadedImage = {
+  url: string;
+};
+
+function paginationParams({ page = 1, perPage = 12 }: PaginationQuery = {}) {
+  const params = new URLSearchParams({
+    page: String(page),
+    per_page: String(perPage),
+  });
+
+  return params.toString();
+}
 
 export const portfolioApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -26,7 +50,7 @@ export const portfolioApi = baseApi.injectEndpoints({
     me: builder.query<ApiEnvelope<LoginResponse["user"]>, void>({
       query: () => endpoints.ME,
     }),
-    getDashboardProfile: builder.query<ApiEnvelope<PortfolioProfile>, void>({
+    getDashboardProfile: builder.query<ApiEnvelope<PortfolioProfile | null>, void>({
       query: () => endpoints.ADMIN_PROFILE,
       providesTags: ["Profile"],
     }),
@@ -41,11 +65,169 @@ export const portfolioApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Profile"],
     }),
-    getAdminProjects: builder.query<
-      ApiEnvelope<PaginatedData<PortfolioProject>>,
+    getProjectCategories: builder.query<ApiEnvelope<ProjectCategory[]>, void>({
+      query: () => endpoints.PROJECT_CATEGORIES,
+      providesTags: ["ProjectCategory"],
+    }),
+    getProjectSources: builder.query<ApiEnvelope<ProjectSource[]>, void>({
+      query: () => endpoints.PROJECT_SOURCES,
+      providesTags: ["ProjectSource"],
+    }),
+    getProjectTechStacks: builder.query<ApiEnvelope<ProjectTechStack[]>, void>({
+      query: () => endpoints.PROJECT_TECH_STACKS,
+      providesTags: ["ProjectTechStack"],
+    }),
+    getAdminProjectCategories: builder.query<
+      ApiEnvelope<ProjectCategory[]>,
       void
     >({
-      query: () => `${endpoints.ADMIN_PROJECTS}?per_page=100`,
+      query: () => endpoints.ADMIN_PROJECT_CATEGORIES,
+      providesTags: ["ProjectCategory"],
+    }),
+    getAdminProjectCategory: builder.query<ApiEnvelope<ProjectCategory>, number>({
+      query: (id) => endpoints.ADMIN_PROJECT_CATEGORY(id),
+      providesTags: ["ProjectCategory"],
+    }),
+    createProjectCategory: builder.mutation<
+      ApiEnvelope<ProjectCategory>,
+      ProjectCategoryPayload
+    >({
+      query: (body) => ({
+        url: endpoints.ADMIN_PROJECT_CATEGORIES,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["ProjectCategory"],
+    }),
+    updateProjectCategory: builder.mutation<
+      ApiEnvelope<ProjectCategory>,
+      { id: number; body: ProjectCategoryPayload }
+    >({
+      query: ({ id, body }) => ({
+        url: endpoints.ADMIN_PROJECT_CATEGORY(id),
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: ["Project", "ProjectCategory"],
+    }),
+    deleteProjectCategory: builder.mutation<ApiEnvelope<null>, number>({
+      query: (id) => ({
+        url: endpoints.ADMIN_PROJECT_CATEGORY(id),
+        method: "DELETE",
+      }),
+      invalidatesTags: ["ProjectCategory"],
+    }),
+    getAdminProjectSources: builder.query<ApiEnvelope<ProjectSource[]>, void>({
+      query: () => endpoints.ADMIN_PROJECT_SOURCES,
+      providesTags: ["ProjectSource"],
+    }),
+    getAdminProjectSource: builder.query<ApiEnvelope<ProjectSource>, number>({
+      query: (id) => endpoints.ADMIN_PROJECT_SOURCE(id),
+      providesTags: ["ProjectSource"],
+    }),
+    createProjectSource: builder.mutation<
+      ApiEnvelope<ProjectSource>,
+      ProjectSourcePayload
+    >({
+      query: (body) => ({
+        url: endpoints.ADMIN_PROJECT_SOURCES,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["ProjectSource"],
+    }),
+    updateProjectSource: builder.mutation<
+      ApiEnvelope<ProjectSource>,
+      { id: number; body: ProjectSourcePayload }
+    >({
+      query: ({ id, body }) => ({
+        url: endpoints.ADMIN_PROJECT_SOURCE(id),
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: ["Project", "ProjectSource"],
+    }),
+    deleteProjectSource: builder.mutation<ApiEnvelope<null>, number>({
+      query: (id) => ({
+        url: endpoints.ADMIN_PROJECT_SOURCE(id),
+        method: "DELETE",
+      }),
+      invalidatesTags: ["ProjectSource"],
+    }),
+    getAdminProjectTechStacks: builder.query<
+      ApiEnvelope<ProjectTechStack[]>,
+      void
+    >({
+      query: () => endpoints.ADMIN_PROJECT_TECH_STACKS,
+      providesTags: ["ProjectTechStack"],
+    }),
+    getAdminProjectTechStack: builder.query<ApiEnvelope<ProjectTechStack>, number>({
+      query: (id) => endpoints.ADMIN_PROJECT_TECH_STACK(id),
+      providesTags: ["ProjectTechStack"],
+    }),
+    createProjectTechStack: builder.mutation<
+      ApiEnvelope<ProjectTechStack>,
+      ProjectTechStackPayload
+    >({
+      query: (body) => ({
+        url: endpoints.ADMIN_PROJECT_TECH_STACKS,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["ProjectTechStack"],
+    }),
+    updateProjectTechStack: builder.mutation<
+      ApiEnvelope<ProjectTechStack>,
+      { id: number; body: ProjectTechStackPayload }
+    >({
+      query: ({ id, body }) => ({
+        url: endpoints.ADMIN_PROJECT_TECH_STACK(id),
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: ["Project", "ProjectTechStack"],
+    }),
+    deleteProjectTechStack: builder.mutation<ApiEnvelope<null>, number>({
+      query: (id) => ({
+        url: endpoints.ADMIN_PROJECT_TECH_STACK(id),
+        method: "DELETE",
+      }),
+      invalidatesTags: ["ProjectTechStack"],
+    }),
+    uploadProjectImage: builder.mutation<ApiEnvelope<UploadedImage>, File>({
+      query: (file) => {
+        const body = new FormData();
+        body.append("file", file);
+
+        return {
+          url: endpoints.ADMIN_PROJECT_IMAGE_UPLOAD,
+          method: "POST",
+          body,
+        };
+      },
+    }),
+    uploadCv: builder.mutation<ApiEnvelope<UploadedImage>, File>({
+      query: (file) => {
+        const body = new FormData();
+        body.append("file", file);
+
+        return {
+          url: endpoints.ADMIN_CV_UPLOAD,
+          method: "POST",
+          body,
+        };
+      },
+    }),
+    getAdminProjects: builder.query<
+      ApiEnvelope<PaginatedData<PortfolioProject>>,
+      PaginationQuery | void
+    >({
+      query: (params) =>
+        `${endpoints.ADMIN_PROJECTS}?${paginationParams(params ?? undefined)}`,
+      providesTags: ["Project"],
+    }),
+    getAdminProject: builder.query<ApiEnvelope<PortfolioProject>, number>({
+      query: (id) => endpoints.ADMIN_PROJECT(id),
       providesTags: ["Project"],
     }),
     createProject: builder.mutation<ApiEnvelope<PortfolioProject>, ProjectPayload>(
@@ -121,9 +303,12 @@ export const portfolioApi = baseApi.injectEndpoints({
     }),
     getContactMessages: builder.query<
       ApiEnvelope<PaginatedData<ContactMessage>>,
-      void
+      PaginationQuery | void
     >({
-      query: () => `${endpoints.ADMIN_CONTACT_MESSAGES}?per_page=100`,
+      query: (params) =>
+        `${endpoints.ADMIN_CONTACT_MESSAGES}?${paginationParams(
+          params ?? undefined,
+        )}`,
       providesTags: ["ContactMessage"],
     }),
     markContactMessageRead: builder.mutation<ApiEnvelope<ContactMessage>, number>({
@@ -144,19 +329,40 @@ export const portfolioApi = baseApi.injectEndpoints({
 });
 
 export const {
+  useCreateProjectCategoryMutation,
   useCreateProjectDetailSectionMutation,
   useCreateProjectMutation,
+  useCreateProjectSourceMutation,
+  useCreateProjectTechStackMutation,
   useDeleteContactMessageMutation,
+  useDeleteProjectCategoryMutation,
   useDeleteProjectDetailSectionMutation,
   useDeleteProjectMutation,
+  useDeleteProjectSourceMutation,
+  useDeleteProjectTechStackMutation,
+  useGetAdminProjectCategoryQuery,
+  useGetAdminProjectCategoriesQuery,
   useGetAdminProjectsQuery,
+  useGetAdminProjectQuery,
+  useGetAdminProjectSourceQuery,
+  useGetAdminProjectSourcesQuery,
+  useGetAdminProjectTechStackQuery,
+  useGetAdminProjectTechStacksQuery,
   useGetContactMessagesQuery,
   useGetDashboardProfileQuery,
+  useGetProjectCategoriesQuery,
   useGetProjectDetailSectionsQuery,
+  useGetProjectSourcesQuery,
+  useGetProjectTechStacksQuery,
   useLoginMutation,
   useMarkContactMessageReadMutation,
   useMeQuery,
+  useUpdateProjectCategoryMutation,
   useUpdateDashboardProfileMutation,
   useUpdateProjectDetailSectionMutation,
   useUpdateProjectMutation,
+  useUpdateProjectSourceMutation,
+  useUpdateProjectTechStackMutation,
+  useUploadCvMutation,
+  useUploadProjectImageMutation,
 } = portfolioApi;

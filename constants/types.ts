@@ -34,6 +34,21 @@ export type PortfolioProject = {
   detail_sections?: ProjectDetailSection[];
 };
 
+export type ProjectTaxonomy = {
+  id?: number;
+  name: string;
+  slug: string;
+  description?: string | null;
+  sort_order?: number;
+  is_published?: boolean;
+};
+
+export type ProjectCategory = ProjectTaxonomy;
+
+export type ProjectSource = ProjectTaxonomy;
+
+export type ProjectTechStack = ProjectTaxonomy;
+
 export type PortfolioProfile = {
   id?: number;
   name: string;
@@ -77,6 +92,14 @@ export type PortfolioExperience = {
   title: string;
   company?: string | null;
   description: string;
+};
+
+export type PortfolioOverview = {
+  profile: PortfolioProfile | null;
+  featured_projects: PortfolioProject[];
+  services: PortfolioService[];
+  skills: PortfolioSkill[];
+  experiences: PortfolioExperience[];
 };
 
 export type ApiEnvelope<T> = {
@@ -140,3 +163,9 @@ export type ProjectDetailSectionPayload = Omit<
   ProjectDetailSection,
   "id" | "project_id"
 >;
+
+export type ProjectCategoryPayload = Omit<ProjectCategory, "id">;
+
+export type ProjectSourcePayload = Omit<ProjectSource, "id">;
+
+export type ProjectTechStackPayload = Omit<ProjectTechStack, "id">;

@@ -1,16 +1,12 @@
 "use client";
 
-import { Github, Mail, ArrowUpRight } from "lucide-react";
+import { Github, Mail, ArrowUpRight, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import MagnetBtn from "@/components/global/MagnetBtn";
+import { usePortfolioOverview } from "@/hooks/use-public-portfolio";
 import { cn } from "@/lib/utils";
 import { setOutlineButtonPosition } from "@/lib/outline-button";
-
-const socialLinks = [
-  { href: "https://github.com/Z1p4U", icon: Github, label: "GitHub" },
-  { href: "mailto:zipshigoto310801@gmail.com", icon: Mail, label: "Email" },
-];
 
 const footerLinks = [
   { href: "/about", label: "About" },
@@ -21,6 +17,27 @@ const footerLinks = [
 
 export function Footer() {
   const pathname = usePathname();
+  const { profile } = usePortfolioOverview();
+  const initials = profile?.name
+    ? profile.name
+        .split(" ")
+        .filter(Boolean)
+        .map((part) => part[0])
+        .join("")
+        .slice(0, 3)
+    : "Portfolio";
+  const socialLinks = [
+    profile?.github_url
+      ? { href: profile.github_url, icon: Github, label: "GitHub" }
+      : null,
+    profile?.email
+      ? { href: `mailto:${profile.email}`, icon: Mail, label: "Email" }
+      : null,
+  ].filter(Boolean) as Array<{
+    href: string;
+    icon: LucideIcon;
+    label: string;
+  }>;
 
   return (
     <footer className="relative z-10 mt-20">
@@ -32,14 +49,21 @@ export function Footer() {
               href="/"
               className="inline-flex items-center text-2xl font-bold tracking-tight text-foreground"
             >
-              TZH<span className="text-primary">.</span>
+              {initials}
+              <span className="text-primary">.</span>
             </Link>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Full-Stack Web Developer
-            </p>
-            <p className="text-xs text-muted-foreground/80">
-              Bangkok, Thailand · Freelance & Part-time
-            </p>
+            {profile?.headline ? (
+              <p className="mt-2 text-sm text-muted-foreground">
+                {profile.headline}
+              </p>
+            ) : null}
+            {profile?.location || profile?.availability ? (
+              <p className="text-xs text-muted-foreground/80">
+                {[profile.location, profile.availability]
+                  .filter(Boolean)
+                  .join(" · ")}
+              </p>
+            ) : null}
           </div>
 
           <nav
@@ -93,8 +117,10 @@ export function Footer() {
         <div className="mt-6 pt-4 border-t border-border/30 flex justify-end">
           <p className="text-[11px] font-mono text-muted-foreground/70 text-right">
             <span>Designed And Implemented By </span>
-            <span className="text-foreground/90">Thant Zin Htet</span>
-            <span> | © 2023 | </span>
+            <span className="text-foreground/90">
+              {profile?.name ?? "Portfolio Owner"}
+            </span>
+            <span> | © {new Date().getFullYear()} | </span>
             <Link href="/credits" className="text-primary hover:underline">
               Credits &amp; Attributions
             </Link>

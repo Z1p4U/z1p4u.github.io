@@ -1,1 +1,5 @@
-export { default } from "@/page/dashboard/login/page";
+import { redirect } from "next/navigation";
+
+export default function DashboardLoginRedirectPage() {
+  redirect("/panel/login");
+}

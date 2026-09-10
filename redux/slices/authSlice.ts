@@ -14,6 +14,7 @@ type AuthUser = {
 };
 
 type AuthState = {
+  isHydrated: boolean;
   token: string | null;
   tokenExpiresAt: string | null;
   user: AuthUser | null;
@@ -25,37 +26,35 @@ type LoginPayload = {
   user: AuthUser;
 };
 
-function readStorage(key: string) {
-  if (typeof window === "undefined") return null;
-  return window.localStorage.getItem(key);
-}
-
-function readStoredUser() {
-  const rawUser = readStorage(AUTH_USER_STORAGE_KEY);
-  if (!rawUser) return null;
-
-  try {
-    return JSON.parse(rawUser) as AuthUser;
-  } catch {
-    return null;
-  }
-}
+type HydrateAuthPayload = {
+  token: string | null;
+  tokenExpiresAt: string | null;
+  user: AuthUser | null;
+};
 
 const initialState: AuthState = {
-  token: readStorage(AUTH_TOKEN_STORAGE_KEY),
-  tokenExpiresAt: readStorage(AUTH_EXPIRES_STORAGE_KEY),
-  user: readStoredUser(),
+  isHydrated: false,
+  token: null,
+  tokenExpiresAt: null,
+  user: null,
 };
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
+    hydrateCredentials(state, action: PayloadAction<HydrateAuthPayload>) {
+      state.isHydrated = true;
+      state.token = action.payload.token;
+      state.tokenExpiresAt = action.payload.tokenExpiresAt;
+      state.user = action.payload.user;
+    },
     setCredentials(state, action: PayloadAction<LoginPayload>) {
       const expiresAt = action.payload.expires_in
         ? new Date(Date.now() + action.payload.expires_in * 1000).toISOString()
         : null;
 
+      state.isHydrated = true;
       state.token = action.payload.access_token;
       state.tokenExpiresAt = expiresAt;
       state.user = action.payload.user;
@@ -77,6 +76,7 @@ const authSlice = createSlice({
       }
     },
     clearCredentials(state) {
+      state.isHydrated = true;
       state.token = null;
       state.tokenExpiresAt = null;
       state.user = null;
@@ -90,5 +90,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearCredentials, setCredentials } = authSlice.actions;
+export const { clearCredentials, hydrateCredentials, setCredentials } =
+  authSlice.actions;
 export default authSlice.reducer;

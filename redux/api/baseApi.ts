@@ -45,6 +45,14 @@ const baseQueryWithAuth: BaseQueryFn<
 export const baseApi = createApi({
   reducerPath: "portfolioApi",
   baseQuery: baseQueryWithAuth,
-  tagTypes: ["Profile", "Project", "ProjectDetailSection", "ContactMessage"],
+  tagTypes: [
+    "Profile",
+    "Project",
+    "ProjectCategory",
+    "ProjectDetailSection",
+    "ProjectSource",
+    "ProjectTechStack",
+    "ContactMessage",
+  ],
   endpoints: () => ({}),
 });

@@ -2,9 +2,12 @@
 
 import { ArrowRight, Mail } from "lucide-react";
 import Link from "next/link";
+import { usePortfolioOverview } from "@/hooks/use-public-portfolio";
 import { setOutlineButtonPosition } from "@/lib/outline-button";
 
 export function ContactSection() {
+  const { profile } = usePortfolioOverview();
+
   return (
     <section className="relative z-10 py-32 px-6 lg:px-16">
       <div className="max-w-7xl mx-auto">
@@ -31,13 +34,15 @@ export function ContactSection() {
             <span>{"Let's discuss"}</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
-          <Link
-            href="mailto:zipshigoto310801@gmail.com"
-            className="flex items-center gap-3 px-8 py-4 text-muted-foreground hover:text-primary transition-colors"
-          >
-            <Mail className="w-4 h-4" />
-            zipshigoto310801@gmail.com
-          </Link>
+          {profile?.email ? (
+            <Link
+              href={`mailto:${profile.email}`}
+              className="flex items-center gap-3 px-8 py-4 text-muted-foreground hover:text-primary transition-colors"
+            >
+              <Mail className="w-4 h-4" />
+              {profile.email}
+            </Link>
+          ) : null}
         </div>
       </div>
     </section>
