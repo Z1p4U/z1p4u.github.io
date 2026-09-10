@@ -1,24 +1,33 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { PortfolioProject } from "@/constants/types";
-import { fetchPortfolioOverview, fetchProjects } from "@/lib/portfolio-api";
+import type {
+  PortfolioOverview,
+  PortfolioProject,
+  ProjectCategory,
+  ProjectSource,
+  ProjectTechStack,
+} from "@/constants/types";
 import {
-  fallbackExperiences,
-  fallbackProfile,
-  fallbackProjects,
-  fallbackServices,
-  fallbackSkills,
-} from "@/lib/portfolio-data";
+  fetchPortfolioOverview,
+  fetchProjectCategories,
+  fetchProjects,
+  fetchProjectSources,
+  fetchProjectTechStacks,
+} from "@/lib/portfolio-api";
+
+const emptyPortfolioOverview: PortfolioOverview = {
+  profile: null,
+  featured_projects: [],
+  services: [],
+  skills: [],
+  experiences: [],
+};
 
 export function usePortfolioOverview() {
-  const [overview, setOverview] = useState({
-    profile: fallbackProfile,
-    featured_projects: fallbackProjects.filter((project) => project.is_featured),
-    services: fallbackServices,
-    skills: fallbackSkills,
-    experiences: fallbackExperiences,
-  });
+  const [overview, setOverview] = useState<PortfolioOverview>(
+    emptyPortfolioOverview,
+  );
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -41,7 +50,7 @@ export function usePortfolioOverview() {
 }
 
 export function usePortfolioProjects(initialProjects?: PortfolioProject[]) {
-  const [projects, setProjects] = useState(initialProjects ?? fallbackProjects);
+  const [projects, setProjects] = useState(initialProjects ?? []);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -61,4 +70,36 @@ export function usePortfolioProjects(initialProjects?: PortfolioProject[]) {
   }, []);
 
   return { projects, isLoading };
+}
+
+export function useProjectTaxonomies() {
+  const [categories, setCategories] = useState<ProjectCategory[]>([]);
+  const [sources, setSources] = useState<ProjectSource[]>([]);
+  const [techStacks, setTechStacks] = useState<ProjectTechStack[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+
+    Promise.all([
+      fetchProjectCategories(),
+      fetchProjectSources(),
+      fetchProjectTechStacks(),
+    ])
+      .then(([nextCategories, nextSources, nextTechStacks]) => {
+        if (!mounted) return;
+        setCategories(nextCategories);
+        setSources(nextSources);
+        setTechStacks(nextTechStacks);
+      })
+      .finally(() => {
+        if (mounted) setIsLoading(false);
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  return { categories, sources, techStacks, isLoading };
 }

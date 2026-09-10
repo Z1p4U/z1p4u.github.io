@@ -1,20 +1,16 @@
-import {
-  fallbackExperiences,
-  fallbackProfile,
-  fallbackProjects,
-  fallbackServices,
-  fallbackSkills,
-  getFallbackProject,
-} from "@/lib/portfolio-data";
 import axiosInstance from "@/constants/axios";
 import { endpoints } from "@/constants/endpoints";
 import type {
   ApiEnvelope,
   PaginatedData,
   PortfolioExperience,
+  PortfolioOverview,
   PortfolioProject,
   PortfolioService,
   PortfolioSkill,
+  ProjectCategory,
+  ProjectSource,
+  ProjectTechStack,
 } from "@/constants/types";
 
 async function getJson<T>(path: string): Promise<T> {
@@ -22,20 +18,20 @@ async function getJson<T>(path: string): Promise<T> {
   return response.data;
 }
 
-export async function fetchPortfolioOverview() {
-  const fallback = {
-    profile: fallbackProfile,
-    featured_projects: fallbackProjects.filter((project) => project.is_featured),
-    services: fallbackServices,
-    skills: fallbackSkills,
-    experiences: fallbackExperiences,
-  };
-
+export async function fetchPortfolioOverview(): Promise<PortfolioOverview> {
   try {
-    const response = await getJson<ApiEnvelope<typeof fallback>>(endpoints.PORTFOLIO);
+    const response = await getJson<ApiEnvelope<PortfolioOverview>>(
+      endpoints.PORTFOLIO,
+    );
     return response.data;
   } catch {
-    return fallback;
+    return {
+      profile: null,
+      featured_projects: [],
+      services: [],
+      skills: [],
+      experiences: [],
+    };
   }
 }
 
@@ -47,7 +43,40 @@ export async function fetchProjects(): Promise<PortfolioProject[]> {
       );
     return response.data.data;
   } catch {
-    return fallbackProjects;
+    return [];
+  }
+}
+
+export async function fetchProjectCategories(): Promise<ProjectCategory[]> {
+  try {
+    const response = await getJson<ApiEnvelope<ProjectCategory[]>>(
+      endpoints.PROJECT_CATEGORIES,
+    );
+    return response.data;
+  } catch {
+    return [];
+  }
+}
+
+export async function fetchProjectSources(): Promise<ProjectSource[]> {
+  try {
+    const response = await getJson<ApiEnvelope<ProjectSource[]>>(
+      endpoints.PROJECT_SOURCES,
+    );
+    return response.data;
+  } catch {
+    return [];
+  }
+}
+
+export async function fetchProjectTechStacks(): Promise<ProjectTechStack[]> {
+  try {
+    const response = await getJson<ApiEnvelope<ProjectTechStack[]>>(
+      endpoints.PROJECT_TECH_STACKS,
+    );
+    return response.data;
+  } catch {
+    return [];
   }
 }
 
@@ -58,7 +87,7 @@ export async function fetchProject(slug: string): Promise<PortfolioProject | nul
     );
     return response.data;
   } catch {
-    return getFallbackProject(slug);
+    return null;
   }
 }
 
@@ -69,7 +98,7 @@ export async function fetchServices(): Promise<PortfolioService[]> {
     );
     return response.data;
   } catch {
-    return fallbackServices;
+    return [];
   }
 }
 
@@ -78,7 +107,7 @@ export async function fetchSkills(): Promise<PortfolioSkill[]> {
     const response = await getJson<ApiEnvelope<PortfolioSkill[]>>(endpoints.SKILLS);
     return response.data;
   } catch {
-    return fallbackSkills;
+    return [];
   }
 }
 
@@ -89,6 +118,6 @@ export async function fetchExperiences(): Promise<PortfolioExperience[]> {
     );
     return response.data;
   } catch {
-    return fallbackExperiences;
+    return [];
   }
 }

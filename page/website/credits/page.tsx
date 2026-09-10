@@ -2,96 +2,40 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Credits & Attributions | Thant Zin Htet",
-  description:
-    "Credits and attributions for tools, libraries, icons, and resources used in this portfolio.",
+  title: "Credits",
+  description: "Credits and attributions for this portfolio.",
 };
-
-const attributions = [
-  {
-    name: "Next.js",
-    description: "React framework used for routing, rendering, and deployment workflows.",
-    href: "https://nextjs.org/",
-  },
-  {
-    name: "React",
-    description: "UI library used to build interactive components.",
-    href: "https://react.dev/",
-  },
-  {
-    name: "Tailwind CSS",
-    description: "Utility-first CSS framework for styling.",
-    href: "https://tailwindcss.com/",
-  },
-  {
-    name: "GSAP",
-    description: "Animation library powering magnetic interactions.",
-    href: "https://gsap.com/",
-  },
-  {
-    name: "Lucide",
-    description: "Icon set used across navigation and sections.",
-    href: "https://lucide.dev/",
-  },
-  {
-    name: "Radix UI",
-    description: "Accessible primitives used by UI components.",
-    href: "https://www.radix-ui.com/",
-  },
-  {
-    name: "shadcn/ui",
-    description: "Component patterns and base primitives.",
-    href: "https://ui.shadcn.com/",
-  },
-  {
-    name: "Codex",
-    description: "AI coding assistant used for implementation support and iteration.",
-    href: "https://openai.com/codex/",
-  },
-  {
-    name: "v0.app",
-    description: "UI generation assistant used for rapid design exploration.",
-    href: "https://v0.app/",
-  },
-];
 
 export default function CreditsPage() {
   return (
-    <section className="relative z-10 pt-32 pb-24 px-6">
-      <div className="max-w-6xl mx-auto">
+    <section className="relative z-10 px-6 pb-24 pt-32">
+      <div className="mx-auto max-w-4xl">
         <div className="mb-12">
-          <p className="text-sm font-mono tracking-[0.3em] text-primary uppercase mb-4">
+          <p className="mb-4 text-sm font-mono uppercase tracking-[0.3em] text-primary">
             Credits
           </p>
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4 text-balance">
+          <h1 className="mb-4 text-balance text-4xl font-bold text-foreground md:text-5xl">
             Credits &amp; Attributions
           </h1>
-          <p className="text-muted-foreground leading-relaxed max-w-2xl">
-            Libraries, frameworks, tools, and assets used to design and
-            implement this portfolio.
+          <p className="max-w-2xl leading-relaxed text-muted-foreground">
+            Runtime libraries and tooling are tracked in the project manifest
+            so attribution stays aligned with the actual codebase.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
-          {attributions.map((item) => (
-            <article
-              key={item.name}
-              className="p-6 rounded-2xl border border-border/50 bg-secondary/30"
+        <div className="rounded-2xl border border-border/50 bg-secondary/30 p-8">
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            Review the current dependency list in{" "}
+            <Link
+              href="https://github.com/Z1p4U/z1p4u.github.io"
+              target="_blank"
+              rel="noreferrer"
+              className="text-primary hover:underline"
             >
-              <h2 className="text-lg font-semibold text-foreground mb-2">{item.name}</h2>
-              <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-                {item.description}
-              </p>
-              <Link
-                href={item.href}
-                target="_blank"
-                rel="noreferrer"
-                className="text-sm text-primary hover:underline"
-              >
-                Visit
-              </Link>
-            </article>
-          ))}
+              the source repository
+            </Link>
+            .
+          </p>
         </div>
       </div>
     </section>

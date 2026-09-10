@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import {
   Download,
   Github,
@@ -13,18 +12,11 @@ import Link from "next/link";
 import { usePortfolioOverview } from "@/hooks/use-public-portfolio";
 import { setOutlineButtonPosition } from "@/lib/outline-button";
 
-const roles = [
-  "Full-Stack Web Developer",
-  "React / Next.js Developer",
-  "Laravel / Node.js Developer",
-  "React Native Developer",
-];
-
 export function HeroSection() {
-  const { profile } = usePortfolioOverview();
-  const [roleIndex, setRoleIndex] = useState(0);
-  const [displayText, setDisplayText] = useState("");
-  const [isDeleting, setIsDeleting] = useState(false);
+  const { profile, skills } = usePortfolioOverview();
+
+  if (!profile) return null;
+
   const firstName = profile.name.split(" ").slice(0, 2).join(" ");
   const lastName = profile.name.split(" ").slice(2).join(" ") || profile.name;
   const phoneHref = profile.phone
@@ -41,30 +33,28 @@ export function HeroSection() {
     icon: LucideIcon;
     label: string;
   }>;
-
-  useEffect(() => {
-    const role = roles[roleIndex];
-    const timeout = setTimeout(
-      () => {
-        if (!isDeleting) {
-          if (displayText.length < role.length) {
-            setDisplayText(role.slice(0, displayText.length + 1));
-          } else {
-            setTimeout(() => setIsDeleting(true), 2000);
-          }
-        } else {
-          if (displayText.length > 0) {
-            setDisplayText(role.slice(0, displayText.length - 1));
-          } else {
-            setIsDeleting(false);
-            setRoleIndex((prev) => (prev + 1) % roles.length);
-          }
-        }
-      },
-      isDeleting ? 30 : 70,
-    );
-    return () => clearTimeout(timeout);
-  }, [displayText, isDeleting, roleIndex]);
+  const stats = [
+    {
+      label: "Years Exp.",
+      value: `${profile.stats.years_experience}+`,
+    },
+    {
+      label: "Clients",
+      value: `${profile.stats.clients_count}+`,
+    },
+    {
+      label: "Projects",
+      value: `${profile.stats.projects_count}+`,
+    },
+    ...(skills.length
+      ? [
+          {
+            label: "Skills",
+            value: `${skills.length}+`,
+          },
+        ]
+      : []),
+  ];
 
   return (
     <section className="relative z-10 min-h-screen flex flex-col justify-center px-6 lg:px-16 pt-30 lg:pt-44">
@@ -72,9 +62,11 @@ export function HeroSection() {
         {/* Overline */}
         <div className="flex items-center gap-4 mb-8">
           <div className="h-px w-12 bg-primary" />
-          <span className="text-xs font-mono text-primary uppercase leading-relaxed">
-            {profile.availability ?? "Available for freelance & part-time"}
-          </span>
+          {profile.availability ? (
+            <span className="text-xs font-mono text-primary uppercase leading-relaxed">
+              {profile.availability}
+            </span>
+          ) : null}
         </div>
 
         {/* Giant name */}
@@ -91,9 +83,8 @@ export function HeroSection() {
             {"// "}
           </span>
           <span className="text-lg md:text-xl font-mono text-foreground ml-2">
-            {displayText}
+            {profile.headline}
           </span>
-          <span className="inline-block w-0.5 h-6 bg-primary ml-1 animate-pulse" />
         </div>
 
         {/* Description */}
@@ -133,7 +124,7 @@ export function HeroSection() {
               onPointerEnter={setOutlineButtonPosition}
               onPointerMove={setOutlineButtonPosition}
             >
-              <span>View Work</span>
+              <span>View Projects</span>
             </Link>
             {profile.cv_url ? (
               <a
@@ -152,39 +143,21 @@ export function HeroSection() {
 
         {/* Stats strip */}
         <div className="mt-16 flex flex-wrap items-center gap-8 md:gap-16 border-t border-border/50 pt-8">
-          <div>
-            <p className="text-3xl md:text-4xl font-bold text-foreground">
-              {profile.stats.years_experience}+
-            </p>
-            <p className="text-xs font-mono text-muted-foreground mt-1 uppercase tracking-wider">
-              Years Exp.
-            </p>
-          </div>
-          <div className="h-8 w-px bg-border/50 hidden md:block" />
-          <div>
-            <p className="text-3xl md:text-4xl font-bold text-foreground">
-              {profile.stats.clients_count}+
-            </p>
-            <p className="text-xs font-mono text-muted-foreground mt-1 uppercase tracking-wider">
-              Clients
-            </p>
-          </div>
-          <div className="h-8 w-px bg-border/50 hidden md:block" />
-          <div>
-            <p className="text-3xl md:text-4xl font-bold text-foreground">
-              {profile.stats.projects_count}+
-            </p>
-            <p className="text-xs font-mono text-muted-foreground mt-1 uppercase tracking-wider">
-              Projects
-            </p>
-          </div>
-          <div className="h-8 w-px bg-border/50 hidden md:block" />
-          <div>
-            <p className="text-3xl md:text-4xl font-bold text-foreground">6+</p>
-            <p className="text-xs font-mono text-muted-foreground mt-1 uppercase tracking-wider">
-              Production Stacks
-            </p>
-          </div>
+          {stats.map((stat, index) => (
+            <div key={stat.label} className="contents">
+              {index > 0 ? (
+                <div className="h-8 w-px bg-border/50 hidden md:block" />
+              ) : null}
+              <div>
+                <p className="text-3xl md:text-4xl font-bold text-foreground">
+                  {stat.value}
+                </p>
+                <p className="text-xs font-mono text-muted-foreground mt-1 uppercase tracking-wider">
+                  {stat.label}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 

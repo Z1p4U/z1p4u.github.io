@@ -1,0 +1,201 @@
+// use prisma-next
+
+model User {
+  id           Int               @id @default(autoincrement())
+  name         String
+  email        String            @unique
+  passwordHash String
+  isAdmin      Boolean           @default(true)
+  createdAt    TimestamptzString @default(now())
+  updatedAt    temporal.updatedAtString()
+
+  @@map("users")
+}
+
+model Profile {
+  id              Int               @id @default(autoincrement())
+  name            String
+  headline        String
+  summary         String
+  bio             String?
+  email           String
+  phone           String?
+  location        String?
+  availability    String?
+  githubUrl       String?
+  linkedinUrl     String?
+  cvUrl           String?
+  yearsExperience Int               @default(0)
+  clientsCount    Int               @default(0)
+  projectsCount   Int               @default(0)
+  createdAt       TimestamptzString @default(now())
+  updatedAt       temporal.updatedAtString()
+
+  @@map("profiles")
+}
+
+model Project {
+  id             Int                    @id @default(autoincrement())
+  title          String
+  slug           String                 @unique
+  description    String
+  category       String
+  source         String?
+  year           String?
+  projectUrl     String?
+  repositoryUrl  String?
+  imageUrl       String?
+  techStack      String                 @default("[]")
+  sortOrder      Int                    @default(0)
+  isFeatured     Boolean                @default(false)
+  isPublished    Boolean                @default(true)
+  lowVisibility  Boolean                @default(false)
+  linkKind       String?
+  detailSections ProjectDetailSection[]
+  createdAt      TimestamptzString      @default(now())
+  updatedAt      temporal.updatedAtString()
+
+  @@index([category])
+  @@index([source])
+  @@index([sortOrder])
+  @@index([isFeatured])
+  @@index([isPublished])
+  @@map("projects")
+}
+
+model ProjectCategory {
+  id          Int               @id @default(autoincrement())
+  name        String            @unique
+  slug        String            @unique
+  description String?
+  sortOrder   Int               @default(0)
+  isPublished Boolean           @default(true)
+  createdAt   TimestamptzString @default(now())
+  updatedAt   temporal.updatedAtString()
+
+  @@index([sortOrder])
+  @@index([isPublished])
+  @@map("project_categories")
+}
+
+model ProjectSource {
+  id          Int               @id @default(autoincrement())
+  name        String            @unique
+  slug        String            @unique
+  description String?
+  sortOrder   Int               @default(0)
+  isPublished Boolean           @default(true)
+  createdAt   TimestamptzString @default(now())
+  updatedAt   temporal.updatedAtString()
+
+  @@index([sortOrder])
+  @@index([isPublished])
+  @@map("project_sources")
+}
+
+model ProjectTechStack {
+  id          Int               @id @default(autoincrement())
+  name        String            @unique
+  slug        String            @unique
+  description String?
+  sortOrder   Int               @default(0)
+  isPublished Boolean           @default(true)
+  createdAt   TimestamptzString @default(now())
+  updatedAt   temporal.updatedAtString()
+
+  @@index([sortOrder])
+  @@index([isPublished])
+  @@map("project_tech_stacks")
+}
+
+model ProjectDetailSection {
+  id          Int               @id @default(autoincrement())
+  projectId   Int
+  blockType   String            @default("contribution")
+  layout      String            @default("image_right")
+  title       String
+  body        String
+  imageUrl    String?
+  imageAlt    String?
+  caption     String?
+  externalUrl String?
+  metadata    String?
+  sortOrder   Int               @default(0)
+  isPublished Boolean           @default(true)
+  createdAt   TimestamptzString @default(now())
+  updatedAt   temporal.updatedAtString()
+  project     Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@index([sortOrder])
+  @@index([isPublished])
+  @@map("project_detail_sections")
+}
+
+model Service {
+  id           Int               @id @default(autoincrement())
+  title        String
+  slug         String            @unique
+  summary      String
+  description  String?
+  deliverables String            @default("[]")
+  techStack    String            @default("[]")
+  sortOrder    Int               @default(0)
+  isPublished  Boolean           @default(true)
+  createdAt    TimestamptzString @default(now())
+  updatedAt    temporal.updatedAtString()
+
+  @@index([sortOrder])
+  @@index([isPublished])
+  @@map("services")
+}
+
+model Skill {
+  id          Int               @id @default(autoincrement())
+  name        String
+  category    String
+  proficiency Int               @default(80)
+  sortOrder   Int               @default(0)
+  isPublished Boolean           @default(true)
+  createdAt   TimestamptzString @default(now())
+  updatedAt   temporal.updatedAtString()
+
+  @@index([category])
+  @@index([sortOrder])
+  @@index([isPublished])
+  @@map("skills")
+}
+
+model Experience {
+  id          Int               @id @default(autoincrement())
+  period      String
+  title       String
+  company     String?
+  description String
+  sortOrder   Int               @default(0)
+  isPublished Boolean           @default(true)
+  createdAt   TimestamptzString @default(now())
+  updatedAt   temporal.updatedAtString()
+
+  @@index([sortOrder])
+  @@index([isPublished])
+  @@map("experiences")
+}
+
+model ContactMessage {
+  id        Int                @id @default(autoincrement())
+  name      String
+  email     String
+  phone     String?
+  budget    String?
+  subject   String
+  message   String
+  status    String             @default("unread")
+  readAt    TimestamptzString?
+  createdAt TimestamptzString  @default(now())
+  updatedAt temporal.updatedAtString()
+
+  @@index([status])
+  @@index([createdAt])
+  @@map("contact_messages")
+}

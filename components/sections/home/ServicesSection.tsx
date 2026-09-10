@@ -1,3 +1,5 @@
+"use client";
+
 import {
   ArrowRight,
   Code2,
@@ -8,47 +10,34 @@ import {
   Wrench,
 } from "lucide-react";
 import Link from "next/link";
+import type { PortfolioService } from "@/constants/types";
+import { usePortfolioOverview } from "@/hooks/use-public-portfolio";
 
-const services = [
-  {
-    icon: Monitor,
-    title: "Company Portfolios",
-    description:
-      "Business websites that showcase your brand and services with clean, maintainable code.",
-  },
-  {
-    icon: ShoppingCart,
-    title: "E-Commerce Platforms",
-    description:
-      "Online stores with catalog, checkout flow, payment integration, and admin management.",
-  },
-  {
-    icon: Server,
-    title: "POS Systems",
-    description:
-      "In-house POS solutions with inventory tracking, sales reporting, and staff workflows.",
-  },
-  {
-    icon: Code2,
-    title: "Custom Web Apps",
-    description:
-      "Full-stack applications built around your business process, reporting, and operations.",
-  },
-  {
-    icon: Smartphone,
-    title: "Mobile Apps",
-    description:
-      "React Native apps for Android/iOS with practical UX and API-connected functionality.",
-  },
-  {
-    icon: Wrench,
-    title: "WordPress Development",
-    description:
-      "WordPress CMS builds with ACF, custom themes, performance improvements, and maintenance.",
-  },
+const serviceIcons = [
+  Monitor,
+  ShoppingCart,
+  Server,
+  Code2,
+  Smartphone,
+  Wrench,
 ];
 
+function getServiceIcon(service: PortfolioService, index: number) {
+  const label = `${service.slug} ${service.title}`.toLowerCase();
+  if (label.includes("mobile")) return Smartphone;
+  if (label.includes("commerce") || label.includes("shop")) return ShoppingCart;
+  if (label.includes("pos")) return Server;
+  if (label.includes("wordpress") || label.includes("cms")) return Wrench;
+  if (label.includes("app")) return Code2;
+  return serviceIcons[index % serviceIcons.length];
+}
+
 export function ServicesSection() {
+  const { services } = usePortfolioOverview();
+  const visibleServices = services.slice(0, 6);
+
+  if (!visibleServices.length) return null;
+
   return (
     <section id="services" className="relative z-10 py-24 px-6 lg:px-16">
       <div className="max-w-7xl mx-auto">
@@ -74,22 +63,26 @@ export function ServicesSection() {
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-px bg-border/30 rounded-xl overflow-hidden">
-          {services.map((service) => (
+          {visibleServices.map((service, index) => {
+            const ServiceIcon = getServiceIcon(service, index);
+
+            return (
             <div
               key={service.title}
               className="bg-background p-8 group hover:bg-secondary/30 transition-all duration-300"
             >
               <div className="flex items-center justify-center w-11 h-11 rounded-xl bg-primary/10 text-primary mb-5 group-hover:bg-primary/20 transition-colors">
-                <service.icon className="w-5 h-5" />
+                <ServiceIcon className="w-5 h-5" />
               </div>
               <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
                 {service.title}
               </h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                {service.description}
+                {service.summary}
               </p>
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

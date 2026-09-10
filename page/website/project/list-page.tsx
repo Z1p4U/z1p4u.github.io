@@ -2,62 +2,33 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
-import { Building2, ExternalLink, Github } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import {
+  Building2,
+  ExternalLink,
+  Github,
+  SlidersHorizontal,
+  X,
+} from "lucide-react";
 import { FaGooglePlay } from "react-icons/fa6";
 
-import { usePortfolioProjects } from "@/hooks/use-public-portfolio";
-import type { PortfolioProject } from "@/constants/types";
+import {
+  usePortfolioProjects,
+  useProjectTaxonomies,
+} from "@/hooks/use-public-portfolio";
 import { cn } from "@/lib/utils";
 
 const PROJECTS_PER_PAGE = 8;
-
-const featuredProjectOrder = [
-  "Iku Team",
-  "Golden Eugenia Myanmar",
-  "Myat Taw Win",
-  "City Hospital Mandalay",
-  "Power Nine Group",
-  "Zay Yar Lin Photography",
-  "India Myanmar Chamber of Commerce",
-  "Asia Beauty Paradise",
-];
-
-const pinnedLastProjectOrder = [
-  "Royal Shambella",
-  "Quan Zhu Fuan",
-  "OMUK Myanmar",
-  "Royal Immigrate",
-  "EIKA Marine",
-  "Internal Revenue Department (UI Template)",
-];
-
-function getProjectSortRank(project: PortfolioProject) {
-  const pinnedLastIndex = pinnedLastProjectOrder.indexOf(project.title);
-
-  if (pinnedLastIndex >= 0) return 100 + pinnedLastIndex;
-
-  const featuredIndex = featuredProjectOrder.indexOf(project.title);
-
-  if (featuredIndex >= 0) return featuredIndex;
-  if (project.tech_stack.includes("WordPress CMS")) return 20;
-  if (
-    project.tech_stack.some((tech) =>
-      ["React", "Next.js", "React Native", "Redux"].includes(tech),
-    )
-  ) {
-    return 40;
-  }
-  if (project.tech_stack.includes("HTML")) return 60;
-
-  return project.sort_order ?? 80;
-}
+const FILTER_PANEL_TRANSITION_MS = 300;
+const PROJECT_GRID_TRANSITION_MS = 180;
 
 function ProjectPreview({
   image,
+  priority = false,
   title,
 }: {
   image?: string | null;
+  priority?: boolean;
   title: string;
 }) {
   return (
@@ -67,6 +38,8 @@ function ProjectPreview({
           src={image}
           alt={`${title} website preview`}
           fill
+          priority={priority}
+          loading={priority ? "eager" : "lazy"}
           unoptimized
           sizes="(min-width: 768px) 50vw, 100vw"
           className="object-cover object-top transition duration-700 group-hover/card:scale-105"
@@ -100,28 +73,92 @@ function ProjectPreview({
   );
 }
 
+function FilterButton({
+  active,
+  children,
+  onClick,
+}: {
+  active: boolean;
+  children: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "cursor-pointer px-4 py-2 text-sm font-medium rounded-full transition-all duration-200",
+        active
+          ? "bg-primary text-primary-foreground"
+          : "bg-secondary text-muted-foreground hover:text-foreground hover:bg-muted border border-border/50",
+      )}
+    >
+      {children}
+    </button>
+  );
+}
+
 export default function ProjectsPage() {
   const { projects } = usePortfolioProjects();
+  const {
+    categories: categoryRecords,
+    sources: sourceRecords,
+    techStacks: techStackRecords,
+  } = useProjectTaxonomies();
   const [activeCategory, setActiveCategory] = useState("All");
+  const [activeSource, setActiveSource] = useState("All");
+  const [activeTechStack, setActiveTechStack] = useState("All");
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [filtersMounted, setFiltersMounted] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
   const categories = useMemo(() => {
-    const uniqueCategories = Array.from(
+    const names = categoryRecords.map((category) => category.name);
+    const projectCategoryNames = Array.from(
       new Set(projects.map((project) => project.category).filter(Boolean)),
     );
-    return ["All", ...uniqueCategories];
-  }, [projects]);
 
-  const orderedProjects = useMemo(() => {
-    return [...projects].sort(
-      (a, b) => getProjectSortRank(a) - getProjectSortRank(b),
+    return ["All", ...(names.length ? names : projectCategoryNames)];
+  }, [categoryRecords, projects]);
+
+  const sources = useMemo(() => {
+    const names = sourceRecords.map((source) => source.name);
+    const projectSourceNames = Array.from(
+      new Set(
+        projects.flatMap((project) =>
+          project.source ? [project.source] : [],
+        ),
+      ),
     );
-  }, [projects]);
 
-  const filtered =
-    activeCategory === "All"
-      ? orderedProjects
-      : orderedProjects.filter((project) => project.category === activeCategory);
+    return ["All", ...(names.length ? names : projectSourceNames)];
+  }, [projects, sourceRecords]);
+
+  const techStacks = useMemo(() => {
+    const names = techStackRecords.map((techStack) => techStack.name);
+    const projectTechStackNames = Array.from(
+      new Set(projects.flatMap((project) => project.tech_stack)),
+    );
+
+    return ["All", ...(names.length ? names : projectTechStackNames)];
+  }, [projects, techStackRecords]);
+
+  const activeFilterCount = [
+    activeCategory,
+    activeSource,
+    activeTechStack,
+  ].filter((filter) => filter !== "All").length;
+
+  const filtered = projects.filter((project) => {
+    const matchesCategory =
+      activeCategory === "All" || project.category === activeCategory;
+    const matchesSource =
+      activeSource === "All" || project.source === activeSource;
+    const matchesTechStack =
+      activeTechStack === "All" || project.tech_stack.includes(activeTechStack);
+
+    return matchesCategory && matchesSource && matchesTechStack;
+  });
 
   const totalPages = Math.max(
     1,
@@ -132,61 +169,209 @@ export default function ProjectsPage() {
     (safeCurrentPage - 1) * PROJECTS_PER_PAGE,
     safeCurrentPage * PROJECTS_PER_PAGE,
   );
+  const visibleProjectKey = paginatedProjects
+    .map((project) => project.slug)
+    .join("|");
+  const [displayedProjects, setDisplayedProjects] = useState(paginatedProjects);
+  const [cardsVisible, setCardsVisible] = useState(true);
+
+  useEffect(() => {
+    if (displayedProjects.map((project) => project.slug).join("|") === visibleProjectKey) {
+      return;
+    }
+
+    const frame = window.requestAnimationFrame(() => {
+      setCardsVisible(false);
+    });
+    const timeout = window.setTimeout(() => {
+      setDisplayedProjects(paginatedProjects);
+      window.requestAnimationFrame(() => setCardsVisible(true));
+    }, PROJECT_GRID_TRANSITION_MS);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.clearTimeout(timeout);
+    };
+  }, [displayedProjects, paginatedProjects, visibleProjectKey]);
+
+  function openFilters() {
+    setFiltersMounted(true);
+    window.requestAnimationFrame(() => setFiltersOpen(true));
+  }
+
+  function closeFilters() {
+    setFiltersOpen(false);
+    window.setTimeout(() => {
+      setFiltersMounted(false);
+    }, FILTER_PANEL_TRANSITION_MS);
+  }
+
+  function toggleFilters() {
+    if (filtersOpen) {
+      closeFilters();
+      return;
+    }
+
+    openFilters();
+  }
 
   return (
     <div className="relative z-10 pt-32 pb-24 px-6">
       <div className="max-w-6xl mx-auto">
-        <div className="mb-12">
+        <div className="mb-8">
           <p className="text-sm font-mono tracking-[0.3em] text-primary uppercase mb-4">
-            My Work
+            Project
           </p>
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4 text-balance">
             Projects & Case Studies
           </h1>
           <p className="text-muted-foreground leading-relaxed max-w-2xl">
-            Real client projects across WordPress, React, React Native, and
-            business-focused website builds. Each project can now include
-            editable contribution notes, implementation details, and visual
-            sections from the Laravel backend.
+            Browse published projects and case studies from the portfolio
+            database.
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-2 mb-12">
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => {
-                setActiveCategory(category);
-                setCurrentPage(1);
-              }}
-              className={cn(
-                "px-4 py-2 text-sm font-medium rounded-full transition-all duration-200",
-                activeCategory === category
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-secondary text-muted-foreground hover:text-foreground hover:bg-muted border border-border/50",
-              )}
-            >
-              {category}
-            </button>
-          ))}
+        <div className="mb-12 flex justify-end border-b border-border/50 pb-8">
+          <button
+            type="button"
+            onClick={toggleFilters}
+            aria-expanded={filtersOpen}
+            aria-controls="project-filters"
+            className={cn(
+              "inline-flex w-fit shrink-0 cursor-pointer items-center gap-2 rounded-full border px-5 py-3 text-sm font-semibold transition-all",
+              filtersOpen || activeFilterCount > 0
+                ? "border-primary/50 bg-primary text-primary-foreground shadow-[0_14px_34px_rgba(124,58,237,0.22)]"
+                : "border-border/60 bg-secondary/60 text-muted-foreground hover:border-primary/40 hover:text-foreground",
+            )}
+          >
+            <SlidersHorizontal className="h-4 w-4" />
+            <span>Filter</span>
+            {activeFilterCount > 0 ? (
+              <span className="grid h-5 min-w-5 place-items-center rounded-full bg-background/20 px-1.5 text-xs">
+                {activeFilterCount}
+              </span>
+            ) : null}
+          </button>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
-          {paginatedProjects.map((project) => (
+        {filtersMounted ? (
+          <div
+            id="project-filters"
+            className={cn(
+              "grid overflow-hidden transition-[grid-template-rows,opacity,transform,filter,margin] duration-300 ease-out",
+              filtersOpen
+                ? "mb-12 grid-rows-[1fr] opacity-100 translate-y-0 blur-0"
+                : "mb-0 grid-rows-[0fr] -translate-y-3 opacity-0 blur-sm",
+            )}
+          >
+            <div className="overflow-hidden">
+              <div className="rounded-2xl border border-border/50 bg-secondary/25 p-5 shadow-[0_18px_60px_rgba(0,0,0,0.18)] backdrop-blur">
+                <div className="mb-5 flex items-center justify-between gap-4">
+                  <p className="text-xs font-mono uppercase tracking-[0.2em] text-muted-foreground">
+                    Project Filters
+                  </p>
+                  <button
+                    type="button"
+                    onClick={closeFilters}
+                    aria-label="Close filters"
+                    className="grid h-9 w-9 cursor-pointer place-items-center rounded-full border border-border/50 text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+                <div className="space-y-5">
+                  <div className="space-y-2">
+                    <p className="text-xs font-mono uppercase tracking-[0.2em] text-muted-foreground">
+                      Category
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {categories.map((category) => (
+                        <FilterButton
+                          key={category}
+                          active={activeCategory === category}
+                          onClick={() => {
+                            setActiveCategory(category);
+                            setCurrentPage(1);
+                          }}
+                        >
+                          {category}
+                        </FilterButton>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-xs font-mono uppercase tracking-[0.2em] text-muted-foreground">
+                      Source
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {sources.map((source) => (
+                        <FilterButton
+                          key={source}
+                          active={activeSource === source}
+                          onClick={() => {
+                            setActiveSource(source);
+                            setCurrentPage(1);
+                          }}
+                        >
+                          {source}
+                        </FilterButton>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-xs font-mono uppercase tracking-[0.2em] text-muted-foreground">
+                      Tech Stack
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {techStacks.map((techStack) => (
+                        <FilterButton
+                          key={techStack}
+                          active={activeTechStack === techStack}
+                          onClick={() => {
+                            setActiveTechStack(techStack);
+                            setCurrentPage(1);
+                          }}
+                        >
+                          {techStack}
+                        </FilterButton>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : null}
+
+        <div
+          className={cn(
+            "grid md:grid-cols-2 gap-6 transition-all duration-200 ease-out",
+            cardsVisible
+              ? "opacity-100 translate-y-0 blur-0"
+              : "opacity-0 translate-y-2 blur-sm",
+          )}
+        >
+          {displayedProjects.map((project, index) => (
             <div
               key={project.slug}
               className={cn(
                 "group/card relative h-full overflow-hidden rounded-2xl border border-border/50 bg-secondary/30 p-5 transition-all duration-500 hover:border-primary/30 hover:bg-secondary/40 hover:shadow-[0_24px_70px_rgba(0,0,0,0.28)]",
-                project.lowVisibility && "opacity-80",
+                project.lowVisibility && cardsVisible && "opacity-80",
+                cardsVisible ? "translate-y-0" : "translate-y-3 opacity-0",
               )}
+              style={{ transitionDelay: cardsVisible ? `${index * 35}ms` : "0ms" }}
             >
               <span className="pointer-events-none absolute inset-0 opacity-0 blur-2xl transition-opacity duration-700 group-hover/card:opacity-100 bg-[radial-gradient(circle_at_50%_0%,rgba(124,58,237,0.28),transparent_42%)]" />
               <div className="relative z-10 flex h-full flex-col">
                 <Link
-                  href={`/project/detail?slug=${project.slug}`}
-                  className="block"
+                  href={`/project/${project.slug}`}
+                  className="block cursor-pointer"
                 >
-                  <ProjectPreview image={project.image_url} title={project.title} />
+                  <ProjectPreview
+                    image={project.image_url}
+                    priority={index === 0}
+                    title={project.title}
+                  />
                 </Link>
                 <div className="flex items-start justify-between mb-4 gap-4">
                   <div className="flex min-w-0 flex-wrap items-center gap-2">
@@ -206,7 +391,7 @@ export default function ProjectsPage() {
                       target="_blank"
                       rel="noreferrer"
                       aria-label={`View ${project.title} code`}
-                      className="p-2 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all"
+                      className="p-2 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all cursor-pointer"
                     >
                       <Github className="w-4 h-4" />
                     </a>
@@ -220,7 +405,7 @@ export default function ProjectsPage() {
                             ? `Open ${project.title} on Play Store`
                             : `Visit ${project.title}`
                         }
-                        className="p-2 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all"
+                        className="p-2 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all cursor-pointer"
                       >
                         {project.linkKind === "android" ? (
                           <FaGooglePlay className="w-4 h-4" />
@@ -233,8 +418,8 @@ export default function ProjectsPage() {
                 </div>
 
                 <Link
-                  href={`/project/detail?slug=${project.slug}`}
-                  className="block"
+                  href={`/project/${project.slug}`}
+                  className="block cursor-pointer"
                 >
                   <h3 className="text-lg font-bold text-foreground group-hover/card:text-primary transition-colors mb-2">
                     {project.title}
@@ -269,7 +454,7 @@ export default function ProjectsPage() {
                 )
               }
               disabled={safeCurrentPage === 1}
-              className="px-4 py-2 text-sm rounded-full border border-border/50 text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              className="px-4 py-2 text-sm rounded-full border border-border/50 text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors enabled:cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
             >
               Previous
             </button>
@@ -281,7 +466,7 @@ export default function ProjectsPage() {
                   type="button"
                   onClick={() => setCurrentPage(page)}
                   className={cn(
-                    "w-9 h-9 text-sm rounded-full border transition-colors",
+                    "w-9 h-9 cursor-pointer text-sm rounded-full border transition-colors",
                     safeCurrentPage === page
                       ? "bg-primary text-primary-foreground border-primary"
                       : "border-border/50 text-muted-foreground hover:text-foreground hover:border-primary/40",
@@ -299,7 +484,7 @@ export default function ProjectsPage() {
                 )
               }
               disabled={safeCurrentPage === totalPages}
-              className="px-4 py-2 text-sm rounded-full border border-border/50 text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              className="px-4 py-2 text-sm rounded-full border border-border/50 text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors enabled:cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
             >
               Next
             </button>
@@ -308,13 +493,12 @@ export default function ProjectsPage() {
 
         <div className="mt-12 p-6 rounded-2xl border border-primary/20 bg-primary/5">
           <p className="text-sm text-muted-foreground leading-relaxed">
-            I also have in-house POS systems, HR software, and internal apps
-            that are still in development or private by owner policy. If you
-            want to review those examples,{" "}
-            <Link href="/contact" className="text-primary hover:underline">
-              contact me personally
+            Some work may be private or unpublished. To ask about additional
+            examples,{" "}
+            <Link href="/contact" className="cursor-pointer text-primary hover:underline">
+              contact me
             </Link>{" "}
-            and I can share demos when owner permission is available.
+            directly.
           </p>
         </div>
       </div>

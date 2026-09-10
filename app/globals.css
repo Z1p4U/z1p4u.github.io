@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@import "ldrs/react/Grid.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -97,6 +98,19 @@
     scrollbar-color: var(--primary) transparent;
     scrollbar-width: thin;
   }
+
+  :where(a, button, [role="button"], summary):not(
+      :disabled,
+      [aria-disabled="true"]
+    ) {
+    cursor: pointer;
+  }
+
+  body[data-scroll-locked] {
+    margin-right: 0 !important;
+    overflow-y: scroll !important;
+    padding-right: 0 !important;
+  }
 }
 
 ::-webkit-scrollbar {
@@ -139,6 +153,19 @@
   100% {
     transform: scaleX(1);
     opacity: 1;
+  }
+}
+
+@keyframes projectFiltersReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+    filter: blur(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
   }
 }
 
@@ -240,6 +267,12 @@
 
 .page-transition-frame {
   animation: pageTransitionIn 0.46s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: opacity, transform, filter;
+}
+
+.project-filter-panel {
+  animation: projectFiltersReveal 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transform-origin: top right;
   will-change: opacity, transform, filter;
 }
 

@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import MagnetBtn from "@/components/global/MagnetBtn";
+import { usePortfolioOverview } from "@/hooks/use-public-portfolio";
 import { setOutlineButtonPosition } from "@/lib/outline-button";
 import Image from "next/image";
 
@@ -22,8 +23,10 @@ export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showScrolledNav, setShowScrolledNav] = useState(false);
   const pathname = usePathname();
+  const { profile } = usePortfolioOverview();
 
   const visibleNavLinks = navLinks.filter((link) => link.visible);
+  const logoLabel = profile?.name ? `${profile.name} home` : "Home";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -81,11 +84,11 @@ export function Navbar() {
             href="/"
             className="inline-flex min-w-21.5 items-center"
             onClick={() => setMenuOpen(false)}
-            aria-label="Thant Zin Htet home"
+            aria-label={logoLabel}
           >
             <Image
               src="/assets/logo/logo.png"
-              alt="Thant Zin Htet logo"
+              alt={profile?.name ? `${profile.name} logo` : "Site logo"}
               width={70}
               height={70}
               priority

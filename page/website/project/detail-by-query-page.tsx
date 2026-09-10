@@ -5,7 +5,6 @@ import { useSearchParams } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 
 import { ProjectDetailClient } from "@/page/website/project/detail-page";
-import { getFallbackProject } from "@/lib/portfolio-data";
 
 export function ProjectDetailByQuery() {
   const searchParams = useSearchParams();
@@ -35,7 +34,6 @@ export function ProjectDetailByQuery() {
     <ProjectDetailClient
       key={slug}
       slug={slug}
-      fallbackProject={getFallbackProject(slug)}
     />
   );
 }

@@ -9,7 +9,7 @@ import {
   useState,
 } from "react";
 import { createPortal } from "react-dom";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import {
   InitialHomeLoader,
   INITIAL_HOME_LOADER_BACKGROUND,
@@ -23,7 +23,7 @@ const routeLabels: Record<string, string> = {
   "/": "Home",
   "/about": "About",
   "/service": "Services",
-  "/project": "Work",
+  "/project": "Projects",
   "/pricing": "Pricing",
   "/contact": "Contact",
   "/credits": "Credits",
@@ -47,7 +47,8 @@ const routeVeilStyle: CSSProperties = {
 
 export function PageTransition({ children }: PageTransitionProps) {
   const pathname = usePathname();
-  const label = routeLabels[pathname] ?? "Page";
+  const searchParams = useSearchParams();
+  const label = getRouteLabel(pathname, searchParams.get("slug"));
   const previousPathnameRef = useRef(pathname);
   const shouldShowInitialIntro = pathname === "/";
   const introActiveRef = useRef(shouldShowInitialIntro);
@@ -265,4 +266,28 @@ export function PageTransition({ children }: PageTransitionProps) {
       </div>
     </>
   );
+}
+
+function getRouteLabel(pathname: string, detailSlug: string | null) {
+  if (pathname === "/project/detail" && detailSlug) {
+    return titleizeSlug(detailSlug);
+  }
+
+  if (pathname.startsWith("/project/") && pathname !== "/project/detail") {
+    return titleizeSlug(pathname.split("/").filter(Boolean).at(-1) ?? "");
+  }
+
+  return routeLabels[pathname] ?? "Page";
+}
+
+function titleizeSlug(value: string) {
+  try {
+    return decodeURIComponent(value)
+      .split("-")
+      .filter(Boolean)
+      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+      .join(" ");
+  } catch {
+    return "Project";
+  }
 }

@@ -11,9 +11,9 @@ const GA_MEASUREMENT_ID = "G-RC2J8C15WC";
 
 export function SiteChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isDashboard = pathname?.startsWith("/dashboard");
+  const isPanel = pathname?.startsWith("/panel") || pathname?.startsWith("/dashboard");
 
-  if (isDashboard) {
+  if (isPanel) {
     return <>{children}</>;
   }
 
