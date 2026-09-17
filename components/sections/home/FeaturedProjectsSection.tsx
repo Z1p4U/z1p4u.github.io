@@ -370,22 +370,14 @@ export function FeaturedProjectsSection() {
           {featuredProjects.map((project, i) => {
             const isDimmed = isHovering && activeIndex !== i;
             const preview = getProjectPreview(project, i);
-
-            return (
-              <Link
-                key={project.slug}
-                href={`/project/detail?slug=${project.slug}`}
-                onMouseEnter={(event) => showFloatingLayers(i, event)}
-                onMouseMove={moveFloatingLayers}
-                className={`group/project relative -mx-6 overflow-hidden border-t border-border/30 px-6 py-7 transition-all duration-700 last:border-b md:py-9 ${
-                  isDimmed ? "opacity-45" : "opacity-100"
-                }`}
-                style={
-                  {
-                    "--project-accent": preview.accent,
-                  } as CSSProperties
-                }
-              >
+            const projectClassName = `group/project relative -mx-6 overflow-hidden border-t border-border/30 px-6 py-7 transition-all duration-700 last:border-b md:py-9 ${
+              isDimmed ? "opacity-45" : "opacity-100"
+            }`;
+            const projectStyle = {
+              "--project-accent": preview.accent,
+            } as CSSProperties;
+            const projectContent = (
+              <>
                 <span className="absolute inset-0 bg-secondary/20 opacity-0 transition-opacity duration-700 group-hover/project:opacity-100" />
                 <span
                   className="absolute inset-y-0 left-1/2 w-screen -translate-x-1/2 opacity-0 blur-2xl transition-opacity duration-700 group-hover/project:opacity-100"
@@ -429,7 +421,32 @@ export function FeaturedProjectsSection() {
 
                   <ArrowUpRight className="hidden h-5 w-5 -rotate-45 text-muted-foreground transition-all duration-500 group-hover/project:rotate-0 group-hover/project:text-[var(--project-accent)] md:block" />
                 </div>
-              </Link>
+              </>
+            );
+
+            return project.project_url ? (
+              <a
+                key={project.slug}
+                href={project.project_url}
+                target="_blank"
+                rel="noreferrer"
+                onMouseEnter={(event) => showFloatingLayers(i, event)}
+                onMouseMove={moveFloatingLayers}
+                className={projectClassName}
+                style={projectStyle}
+              >
+                {projectContent}
+              </a>
+            ) : (
+              <div
+                key={project.slug}
+                onMouseEnter={(event) => showFloatingLayers(i, event)}
+                onMouseMove={moveFloatingLayers}
+                className={projectClassName}
+                style={projectStyle}
+              >
+                {projectContent}
+              </div>
             );
           })}
         </div>

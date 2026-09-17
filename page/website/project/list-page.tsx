@@ -182,12 +182,27 @@ export default function ProjectsPage() {
             >
               <span className="pointer-events-none absolute inset-0 opacity-0 blur-2xl transition-opacity duration-700 group-hover/card:opacity-100 bg-[radial-gradient(circle_at_50%_0%,rgba(124,58,237,0.28),transparent_42%)]" />
               <div className="relative z-10 flex h-full flex-col">
-                <Link
-                  href={`/project/detail?slug=${project.slug}`}
-                  className="block"
-                >
-                  <ProjectPreview image={project.image_url} title={project.title} />
-                </Link>
+                {project.project_url ? (
+                  <a
+                    href={project.project_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="block"
+                    aria-label={`Visit ${project.title}`}
+                  >
+                    <ProjectPreview
+                      image={project.image_url}
+                      title={project.title}
+                    />
+                  </a>
+                ) : (
+                  <div className="block">
+                    <ProjectPreview
+                      image={project.image_url}
+                      title={project.title}
+                    />
+                  </div>
+                )}
                 <div className="flex items-start justify-between mb-4 gap-4">
                   <div className="flex min-w-0 flex-wrap items-center gap-2">
                     <span className="text-xs font-mono text-primary px-3 py-1 rounded-full bg-primary/10">
@@ -232,17 +247,31 @@ export default function ProjectsPage() {
                   </div>
                 </div>
 
-                <Link
-                  href={`/project/detail?slug=${project.slug}`}
-                  className="block"
-                >
-                  <h3 className="text-lg font-bold text-foreground group-hover/card:text-primary transition-colors mb-2">
-                    {project.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed mb-5">
-                    {project.description}
-                  </p>
-                </Link>
+                {project.project_url ? (
+                  <a
+                    href={project.project_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="block"
+                    aria-label={`Visit ${project.title}`}
+                  >
+                    <h3 className="text-lg font-bold text-foreground group-hover/card:text-primary transition-colors mb-2">
+                      {project.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-5">
+                      {project.description}
+                    </p>
+                  </a>
+                ) : (
+                  <div className="block">
+                    <h3 className="text-lg font-bold text-foreground group-hover/card:text-primary transition-colors mb-2">
+                      {project.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-5">
+                      {project.description}
+                    </p>
+                  </div>
+                )}
 
                 <div className="mt-auto flex flex-wrap gap-2 pt-1">
                   {project.tech_stack.map((tech) => (
